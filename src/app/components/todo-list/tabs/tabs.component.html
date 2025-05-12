@@ -1,0 +1,4 @@
+<div class="tabs">
+    <button class="tab" [class.active]="activeTab === 'todo'" (click)="switchTab('todo')">To Do</button>
+    <button class="tab" [class.active]="activeTab === 'completed'" (click)="switchTab('completed')">Completed</button>
+</div>
