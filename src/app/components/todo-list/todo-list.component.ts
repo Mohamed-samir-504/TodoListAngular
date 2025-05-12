@@ -28,6 +28,22 @@ export class TodoListComponent {
     });
   }
 
+  get filteredTodos() {
+
+    return this.todos
+      .filter(todo => todo.status === this.activeTab)
+      .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
+      .sort((a, b) => {
+        if (a.priority === 0 && b.priority === 0) {
+          const aTime = a.timestamp?.toDate?.().getTime?.() ?? 0;
+          const bTime = b.timestamp?.toDate?.().getTime?.() ?? 0;
+          return bTime - aTime; // Newer first
+        }
+        return b.priority - a.priority;
+
+      });
+  }
+
 
   onSwitchTab(selectedTab: string) {
     this.activeTab = selectedTab;
@@ -91,18 +107,5 @@ export class TodoListComponent {
     }
   }
 
-  get filteredTodos() {
-
-    return this.todos
-      .filter(todo => todo.status === this.activeTab)
-      .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
-      .sort((a, b) => {
-        if (a.priority === 0 && b.priority === 0) {
-          return b.timestamp.toDate() - a.timestamp.toDate(); // Newest first
-        }
-        return b.priority - a.priority;
-      
-      });
-  }
 
 }
