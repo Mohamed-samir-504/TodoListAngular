@@ -1,1 +1,11 @@
-<p>add-form works!</p>
+<div class="form">
+    <div class="input-group">
+      <label>Title:</label>
+      <input [(ngModel)]="title" type="text" placeholder="Todo title" />
+    </div>
+    <div class="input-group">
+      <label>Description:</label>
+      <input [(ngModel)]="description" type="text" placeholder="Todo description" />
+    </div>
+    <button class="add-btn" (click)="onAdd()">Add</button>
+</div>

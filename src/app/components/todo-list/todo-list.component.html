@@ -2,7 +2,7 @@
 
 <app-tabs (selectedTab)="onSwitchTab($event)" />
 
-<app-add-form></app-add-form>
+<app-add-form (add)="onAddTodo($event)"></app-add-form>
 
 <app-search-form></app-search-form>
 

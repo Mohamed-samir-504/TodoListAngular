@@ -19,4 +19,15 @@ export class TodoListComponent {
   onSwitchTab(selectedTab: string) {
     this.activeTab = selectedTab;
   }
+
+  onAddTodo(todo: { title: string, description: string }) {
+    this.todoService.addTodo(todo.title, todo.description).subscribe({
+      next: () => {
+        console.log('Todo added successfully');
+      },
+      error: (error) => {
+        console.error('Error adding todo:', error);
+      }
+    });
+  }
 }
