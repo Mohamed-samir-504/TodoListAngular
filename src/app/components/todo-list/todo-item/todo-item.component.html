@@ -1,1 +1,22 @@
-<p>todo-item works!</p>
+<div class="todo-item" [attr.data-status]="status" [class.priority]="priority">
+    <div>
+        <h3 class="todo-title" [class.completed]="status === 'completed'">
+            {{ title }}
+        </h3>
+        <p class="todo-desc" [class.completed]="status === 'completed'">
+            {{ description }}
+        </p>
+    </div>
+    <div class="icons">
+        @if(status === 'todo'){
+            <i class="fa-solid fa-check" (click)="onComplete()"></i>
+            <i class="fa-solid fa-trash" (click)="onDelete()"></i>
+            <i class="fa-solid fa-circle-up priority-icon" [class.active]="priority"
+                (click)="onTogglePriority()" title="Mark as priority"></i>
+        }
+
+        @else {
+            <i class="fa-solid fa-trash" (click)="onDelete()"></i>
+        }
+    </div>
+</div>

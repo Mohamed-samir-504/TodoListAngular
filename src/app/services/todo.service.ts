@@ -41,12 +41,12 @@ export class TodoService {
   }
 
   updateStatus(id: string, status: string): Observable<void> {
-    const updatePromise = updateDoc(doc(this.firestore, 'todo-items', id), { status });
+    const updatePromise = updateDoc(doc(this.firestore, 'todo-items', id), { status: status});
     return from(updatePromise);
   }
 
   updatePriority(id: string, priority: number): Observable<void> {
-    const updatePromise = updateDoc(doc(this.firestore, 'todo-items', id), { priority });
+    const updatePromise = updateDoc(doc(this.firestore, 'todo-items', id), { priority: priority });
     return from(updatePromise);
   }
 }

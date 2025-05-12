@@ -13,8 +13,21 @@ import { TodoService } from '../../services/todo.service';
 })
 export class TodoListComponent {
 
-  constructor(private todoService: TodoService) { }
-  activeTab!: string;
+  todos: any[] = [];
+  activeTab: string = 'todo';
+  searchText: string = '';
+
+  constructor(private todoService: TodoService) { 
+    todoService.getTodos().subscribe({
+      next: (todos) => {
+        this.todos = todos;
+      },
+      error: (error) => {
+        console.error('Error fetching todos:', error);
+      }
+    });
+  }
+  
 
   onSwitchTab(selectedTab: string) {
     this.activeTab = selectedTab;
@@ -30,4 +43,60 @@ export class TodoListComponent {
       }
     });
   }
+
+  onSearchInput(searchedText: string) {
+    this.searchText = searchedText;
+  }
+
+  onDeleteTodo(todoId: string) {
+    this.todoService.deleteTodo(todoId).subscribe({
+      next: () => {
+        console.log('Todo deleted successfully');
+        this.todos = this.todos.filter(todo => todo.id !== todoId);
+      },
+      error: (error) => {
+        console.error('Error deleting todo:', error);
+      }
+    });
+  }
+
+  onCompleteTodo(todoId: string) {
+    this.todoService.updateStatus(todoId,"completed").subscribe({
+      next: () => {
+        console.log('Todo completed successfully');
+        const todo = this.todos.find(todo => todo.id === todoId);
+        if (todo) {
+          todo.status = 'completed';
+        }
+      },
+      error: (error) => {
+        console.error('Error completing todo:', error);
+      }
+    });
+  }
+
+  onTogglePriority(todoId: string) {
+    const todo = this.todos.find(todo => todo.id === todoId);
+    if (todo) {
+      const newPriority = todo.priority ? 0 : 1;
+      this.todoService.updatePriority(todoId, newPriority).subscribe({
+        next: () => {
+          console.log('Todo priority updated successfully');
+          todo.priority = newPriority;
+        },
+        error: (error) => {
+          console.error('Error updating todo priority:', error);
+        }
+      });
+    }
+  }
+
+
+  get filteredTodos() {
+    return this.todos
+      .filter(todo => todo.status === this.activeTab)
+      .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
+      .sort((a, b) => b.priority - a.priority);
+  }
+
 }
