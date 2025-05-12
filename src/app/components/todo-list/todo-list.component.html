@@ -10,7 +10,7 @@
 
 
 
-@for(todo of todos; track todo.id){
+@for(todo of filteredTodos; track todo.id){
     @if(todo.status === activeTab){
         <app-todo-item 
             [id]="todo.id" 

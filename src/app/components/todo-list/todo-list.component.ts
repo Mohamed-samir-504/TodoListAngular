@@ -17,7 +17,7 @@ export class TodoListComponent {
   activeTab: string = 'todo';
   searchText: string = '';
 
-  constructor(private todoService: TodoService) { 
+  constructor(private todoService: TodoService) {
     todoService.getTodos().subscribe({
       next: (todos) => {
         this.todos = todos;
@@ -27,7 +27,7 @@ export class TodoListComponent {
       }
     });
   }
-  
+
 
   onSwitchTab(selectedTab: string) {
     this.activeTab = selectedTab;
@@ -61,7 +61,7 @@ export class TodoListComponent {
   }
 
   onCompleteTodo(todoId: string) {
-    this.todoService.updateStatus(todoId,"completed").subscribe({
+    this.todoService.updateStatus(todoId, "completed").subscribe({
       next: () => {
         console.log('Todo completed successfully');
         const todo = this.todos.find(todo => todo.id === todoId);
@@ -91,12 +91,18 @@ export class TodoListComponent {
     }
   }
 
-
   get filteredTodos() {
+
     return this.todos
       .filter(todo => todo.status === this.activeTab)
       .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
-      .sort((a, b) => b.priority - a.priority);
+      .sort((a, b) => {
+        if (a.priority === 0 && b.priority === 0) {
+          return b.timestamp.toDate() - a.timestamp.toDate(); // Newest first
+        }
+        return b.priority - a.priority;
+      
+      });
   }
 
 }

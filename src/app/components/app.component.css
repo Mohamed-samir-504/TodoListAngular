@@ -1,12 +1,6 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background-color: #1C1C1E;
-  }
-  
+
 main{
-    height: 100vh;
+    
     background-color: #1C1C1E;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -15,10 +9,16 @@ main{
     display: flex;
     justify-content: center;
     padding-top: 30px;
+    
 }
 .container {
     width: 700px;
     background-color: #2A2A2E;
     padding: 30px;
     border-radius: 8px;
+
 }
+
+.container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
