@@ -19,5 +19,8 @@ export class AddFormComponent {
       this.title = '';
       this.description = '';
     }
+    else{
+      alert('Please fill in both title and description.');
+    }
   }
 }
