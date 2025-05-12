@@ -1,7 +1,7 @@
 .todo-item {
     background-color: #3a3a3a;
     padding: 15px;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
     border-radius: 6px;
     display: flex;
     justify-content: space-between;
@@ -33,7 +33,7 @@
     margin-left: 15px;
     cursor: pointer;
     font-size: 18px;
-    padding: 10px;
+    padding: 15px;
 }
 
 .icons i:hover {
