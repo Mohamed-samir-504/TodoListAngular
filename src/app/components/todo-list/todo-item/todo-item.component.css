@@ -1,5 +1,5 @@
 .todo-item {
-    background-color: #F5EFFF;
+    background-color: #ede9f2;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 6px;
@@ -9,7 +9,7 @@
 }
 
 .todo-title {
-    color: #7469B6;
+    color: #6A197D;
     font-weight: bold;
     margin: 0;
 }

@@ -13,11 +13,7 @@
 @for(todo of filteredTodos; track todo.id){
     @if(todo.status === activeTab){
         <app-todo-item 
-            [id]="todo.id" 
-            [title]="todo.title" 
-            [description]="todo.description" 
-            [status]="todo.status"
-            [priority]="todo.priority" 
+            [todo]="todo"
             (complete)="onCompleteTodo($event)" 
             (delete)="onDeleteTodo($event)"
             (togglePriority)="onTogglePriority($event)">

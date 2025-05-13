@@ -8,24 +8,27 @@ import { CommonModule } from '@angular/common';
   styleUrl: './todo-item.component.css'
 })
 export class TodoItemComponent {
-  @Input() id!: string;
-  @Input() title!: string;
-  @Input() description!: string;
-  @Input() status!: 'todo' | 'completed';
-  @Input() priority: boolean = false;
 
+  @Input () todo!:{
+    id: string;
+    title: string;
+    description: string;
+    status: 'todo' | 'completed';
+    priority: boolean;
+  }
+  
   @Output() delete = new EventEmitter<string>();
   @Output() complete = new EventEmitter<string>();
   @Output() togglePriority = new EventEmitter<string>();
 
   onDelete() {
-    this.delete.emit(this.id);
+    this.delete.emit(this.todo.id);
   }
   onComplete() {
-    this.complete.emit(this.id);
+    this.complete.emit(this.todo.id);
   }
   onTogglePriority() {
-    this.togglePriority.emit(this.id);
+    this.togglePriority.emit(this.todo.id);
   }
 
 }

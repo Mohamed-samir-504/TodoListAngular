@@ -1,17 +1,17 @@
-<div class="todo-item" [attr.data-status]="status" [class.priority]="priority">
+<div class="todo-item" [attr.data-status]="todo.status" [class.priority]="todo.priority">
     <div>
-        <h3 class="todo-title" [class.completed]="status === 'completed'">
-            {{ title }}
+        <h3 class="todo-title" [class.completed]="todo.status === 'completed'">
+            {{ todo.title }}
         </h3>
-        <p class="todo-desc"  [class.completed]="status === 'completed'">
-            {{ description }}
+        <p class="todo-desc"  [class.completed]="todo.status === 'completed'">
+            {{ todo.description }}
         </p>
     </div>
     <div class="icons">
-        @if(status === 'todo'){
+        @if(todo.status === 'todo'){
             <i class="fa-solid fa-check" (click)="onComplete()"></i>
             <i class="fa-solid fa-trash" (click)="onDelete()"></i>
-            <i class="fa-solid fa-circle-up priority-icon" [class.active]="priority"
+            <i class="fa-solid fa-circle-up priority-icon" [class.active]="todo.priority"
                 (click)="onTogglePriority()" title="Mark as priority"></i>
         }
 
