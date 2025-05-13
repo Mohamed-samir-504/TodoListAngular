@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { type todoItem } from './todo-item.model';
 
 @Component({
   selector: 'app-todo-item',
@@ -9,13 +9,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TodoItemComponent {
 
-  @Input () todo!:{
-    id: string;
-    title: string;
-    description: string;
-    status: 'todo' | 'completed';
-    priority: boolean;
-  }
+  @Input () todo!:todoItem;
   
   @Output() delete = new EventEmitter<string>();
   @Output() complete = new EventEmitter<string>();
