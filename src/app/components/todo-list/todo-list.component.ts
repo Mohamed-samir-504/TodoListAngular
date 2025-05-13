@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TabsComponent } from "./tabs/tabs.component";
 import { AddFormComponent } from "./add-form/add-form.component";
 import { SearchFormComponent } from "./search-form/search-form.component";
 import { TodoItemComponent } from "./todo-item/todo-item.component";
 import { TodoService } from '../../services/todo.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -13,20 +14,23 @@ import { TodoService } from '../../services/todo.service';
 })
 export class TodoListComponent {
 
+  private todosSub!: Subscription;
+
   todos: any[] = [];
   activeTab: string = 'todo';
   searchText: string = '';
 
   constructor(private todoService: TodoService) {
-    todoService.getTodos().subscribe({
+    this.todosSub = todoService.getTodos().subscribe({
       next: (todos) => {
         this.todos = todos;
+        console.log("hello");
       },
       error: (error) => {
         console.error('Error fetching todos:', error);
       }
     });
-  }
+   }
 
   get filteredTodos() {
 
@@ -49,6 +53,10 @@ export class TodoListComponent {
     this.activeTab = selectedTab;
   }
 
+  onSearchInput(searchedText: string) {
+    this.searchText = searchedText;
+  }
+
   onAddTodo(todo: { title: string, description: string }) {
     this.todoService.addTodo(todo.title, todo.description).subscribe({
       next: () => {
@@ -58,10 +66,6 @@ export class TodoListComponent {
         console.error('Error adding todo:', error);
       }
     });
-  }
-
-  onSearchInput(searchedText: string) {
-    this.searchText = searchedText;
   }
 
   onDeleteTodo(todoId: string) {
@@ -105,6 +109,11 @@ export class TodoListComponent {
         }
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.todosSub.unsubscribe();
+    console.log("destroy");
   }
 
 
