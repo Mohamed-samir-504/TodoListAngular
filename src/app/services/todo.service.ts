@@ -19,7 +19,7 @@ export class TodoService {
 
   getTodos(): Observable<any[]> {
     const todoCollection = collection(this.firestore, 'todo-items');
-    const q = query(todoCollection, orderBy('priority', 'desc'));
+    const q = query(todoCollection);
     return collectionData(q, { idField: 'id' }); 
   }
 
