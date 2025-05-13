@@ -1,5 +1,5 @@
 .todo-item {
-    background-color: #3a3a3a;
+    background-color: #F5EFFF;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 6px;
@@ -9,7 +9,7 @@
 }
 
 .todo-title {
-    color: #18FFFF;
+    color: #7469B6;
     font-weight: bold;
     margin: 0;
 }
@@ -19,7 +19,7 @@
 
 .todo-desc {
     margin: 5px 0 0 0;
-    color: #ccc;
+    color: black;
     max-width: 75%;
 }
 .todo-desc.completed {
@@ -51,7 +51,7 @@
   }
 
 .icons i.fa-check{
-    color: #69F0AE;
+    color: #5CB338;
 }
 
 .icons i.fa-trash {

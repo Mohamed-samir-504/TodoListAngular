@@ -7,8 +7,8 @@
     padding: 10px 20px;
     flex:1;
     border: none;
-    background-color: #424242;
-    color: white;
+    background-color: #F5EFFF;
+    color: Black;
     cursor: pointer;
     border-radius: 4px;
 }
@@ -19,5 +19,6 @@
 }
 
 .tab.active {
-    background-color: #00BFA5;
+    background-color: #7469B6;
+    color: white;
 }
