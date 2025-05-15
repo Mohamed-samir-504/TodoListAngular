@@ -24,7 +24,7 @@ export class TodoListComponent {
     this.todosSub = todoService.getTodos().subscribe({
       next: (todos) => {
         this.todos = todos;
-        console.log("hello");
+        
       },
       error: (error) => {
         console.error('Error fetching todos:', error);
@@ -113,7 +113,6 @@ export class TodoListComponent {
 
   ngOnDestroy(): void {
     this.todosSub.unsubscribe();
-    console.log("destroy");
   }
 
 
