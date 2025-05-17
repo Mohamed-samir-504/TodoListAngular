@@ -2,15 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 
-function equalPasswords(control: AbstractControl){
+function equalPasswords(control: AbstractControl) {
   const password = control.get('password')?.value;
   const confirmPassword = control.get('confirmPassword')?.value;
 
   if (password !== confirmPassword) {
     return { passwordsNotEqual: true };
-  } 
+  }
   return null;
 }
 
@@ -23,6 +24,9 @@ function equalPasswords(control: AbstractControl){
 export class SignupComponent {
 
   private router = inject(Router);
+  //private authService = inject(AuthService);
+
+  constructor(private authService: AuthService) { }
 
   signupForm = new FormGroup({
     name: new FormControl('', {
@@ -39,7 +43,7 @@ export class SignupComponent {
       confirmPassword: new FormControl('', {
         validators: [Validators.required, Validators.minLength(6)],
       }),
-    },{
+    }, {
       validators: [equalPasswords]
     })
 
@@ -47,8 +51,19 @@ export class SignupComponent {
 
   onSubmit(): void {
     if (this.signupForm.valid) {
-      const { email, passwords } = this.signupForm.value;
-      console.log('Signup submitted:', email, passwords);
+      const name = this.signupForm.get('name')!.value;
+      const email = this.signupForm.get('email')!.value;
+      const password = this.signupForm.get('passwords.password')!.value;
+
+      this.authService.signUp(name!, email!, password!).subscribe({
+        next: (cred) => {
+          console.log('Signed up:', cred.user.uid);
+          this.router.navigate(['/user', cred.user.uid, 'todos']);
+        },
+        error: (err) => {
+          console.error('Signup failed:', err.message);
+        }
+      });
     }
   }
 

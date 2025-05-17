@@ -5,6 +5,7 @@ import { SearchFormComponent } from "./search-form/search-form.component";
 import { TodoItemComponent } from "./todo-item/todo-item.component";
 import { TodoService } from '../../services/todo.service';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-todo-list',
@@ -19,8 +20,10 @@ export class TodoListComponent {
   todos: any[] = [];
   activeTab: string = 'todo';
   searchText: string = '';
+  userId!: string;
 
-  constructor(private todoService: TodoService) {
+
+  constructor(private todoService: TodoService, private route: ActivatedRoute) {
     this.todosSub = todoService.getTodos().subscribe({
       next: (todos) => {
         this.todos = todos;
@@ -31,6 +34,11 @@ export class TodoListComponent {
       }
     });
    }
+
+   ngOnInit(): void {
+    this.userId = this.route.snapshot.paramMap.get('userId')!;
+    console.log('User ID:', this.userId);
+  }
 
   get filteredTodos() {
 

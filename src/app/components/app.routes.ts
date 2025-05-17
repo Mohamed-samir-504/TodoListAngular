@@ -18,7 +18,7 @@ export const routes: Routes = [
         component: SignupComponent
     },
     {
-        path: 'todos',
+        path: 'user/:userId/todos',
         component: TodoListComponent
     },
 ];
