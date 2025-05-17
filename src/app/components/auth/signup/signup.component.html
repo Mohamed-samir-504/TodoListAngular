@@ -1,1 +1,58 @@
-<p>signup works!</p>
+<div class="signup-container">
+    <h2>Sign up</h2>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <label>Name</label>
+        <input type="name" formControlName="name" placeholder="Enter your name" />
+
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="Enter your email" />
+        <div class="error" *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+            <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</small>
+            <small *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format.</small>
+        </div>
+
+        <div formGroupName="passwords">
+            <label>Password</label>
+            <input 
+                type="password" 
+                formControlName="password" 
+                placeholder="Enter your password" 
+            />
+            @if(signupForm.get('passwords')?.invalid &&
+                 signupForm.get('passwords')?.get('password')?.touched){
+
+                <div class="error">
+                    <small *ngIf="signupForm.get('passwords')?.get('password')?.errors?.['required']">Password is required.</small>
+                    <small *ngIf="signupForm.get('passwords')?.get('password')?.errors?.['minlength']">Minimum 6 characters.</small>
+                </div>
+            }
+            
+
+            <label>Confirm password</label>
+            <input 
+                type="password" 
+                formControlName="confirmPassword" 
+                placeholder="Confirm your password" 
+            />
+
+            @if(signupForm.get('passwords')?.invalid &&
+                 signupForm.get('passwords')?.get('confirmPassword')?.touched){
+
+                <div class="error">
+                    <small *ngIf="signupForm.get('passwords')?.errors?.['passwordsNotEqual']">Passwords do not match.</small>
+                </div>
+            }
+            
+        </div>
+
+
+        <button type="submit" [disabled]="signupForm.invalid">Sign up</button>
+    </form>
+
+    <div class="login-section">
+        <p>Already have an account?</p>
+        <button class="login-btn" (click)="goToLogin()">Login</button>
+    </div>
+
+</div>
