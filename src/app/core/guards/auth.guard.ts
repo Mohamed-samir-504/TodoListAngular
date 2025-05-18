@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { Observable, of } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate {
@@ -17,7 +16,6 @@ export class AuthGuard implements CanActivate {
         else{
             return this.router.createUrlTree(['/login']);
         }
-        
       }), 
     );
   }
