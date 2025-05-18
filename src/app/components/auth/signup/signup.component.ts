@@ -58,7 +58,7 @@ export class SignupComponent {
       this.authService.signUp(name!, email!, password!).subscribe({
         next: (cred) => {
           console.log('Signed up:', cred.user.uid);
-          this.router.navigate(['/user', cred.user.uid, 'todos']);
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           console.error('Signup failed:', err.message);

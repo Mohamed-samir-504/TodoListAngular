@@ -21,4 +21,8 @@ export const routes: Routes = [
         path: 'user/:userId/todos',
         component: TodoListComponent
     },
+    { 
+        path: '**', 
+        redirectTo: 'login' 
+    }
 ];
