@@ -19,7 +19,7 @@ export const routes: Routes = [
     },
     {
         path: 'user/:userId/todos',
-        component: TodoListComponent
+        loadComponent: () => import('./todo-list/todo-list.component').then(m => m.TodoListComponent)
     },
     { 
         path: '**', 
