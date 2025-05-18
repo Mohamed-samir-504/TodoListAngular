@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, User, UserCredential } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, serverTimestamp, getDoc } from '@angular/fire/firestore';
-import { from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private auth: Auth, private firestore: Firestore) {}
+  
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$ = this.userSubject.asObservable();
 
+  constructor(private auth: Auth, private firestore: Firestore) {
+    onAuthStateChanged(this.auth, user => {
+      this.userSubject.next(user);
+    });
+  }
+
+  
   signUp(name: string, email: string, password: string): Observable<UserCredential> {
     return from(
       createUserWithEmailAndPassword(this.auth, email, password).then((cred) => {
