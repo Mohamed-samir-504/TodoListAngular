@@ -3,7 +3,7 @@ import { TabsComponent } from "./tabs/tabs.component";
 import { AddFormComponent } from "./add-form/add-form.component";
 import { SearchFormComponent } from "./search-form/search-form.component";
 import { TodoItemComponent } from "./todo-item/todo-item.component";
-import { TodoService } from '../../services/todo.service';
+import { TodoService } from './todo.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
