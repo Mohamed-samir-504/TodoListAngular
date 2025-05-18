@@ -24,8 +24,6 @@ function equalPasswords(control: AbstractControl) {
 export class SignupComponent {
 
   private router = inject(Router);
-  //private authService = inject(AuthService);
-
   constructor(private authService: AuthService) { }
 
   signupForm = new FormGroup({
@@ -51,9 +49,9 @@ export class SignupComponent {
 
   onSubmit(): void {
     if (this.signupForm.valid) {
-      const name = this.signupForm.get('name')!.value;
-      const email = this.signupForm.get('email')!.value;
-      const password = this.signupForm.get('passwords.password')!.value;
+      const name = this.signupForm.get('name')?.value;
+      const email = this.signupForm.get('email')?.value;
+      const password = this.signupForm.get('passwords.password')?.value;
 
       this.authService.signUp(name!, email!, password!).subscribe({
         next: (cred) => {
