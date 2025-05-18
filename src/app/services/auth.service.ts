@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, UserCredential } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, serverTimestamp } from '@angular/fire/firestore';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential } from '@angular/fire/auth';
+import { Firestore, doc, setDoc, serverTimestamp, getDoc } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -21,5 +21,14 @@ export class AuthService {
         }).then(() => cred);
       })
     );
+  }
+
+
+  login(email: string, password: string): Observable<UserCredential> {
+    return from(
+    signInWithEmailAndPassword(this.auth, email, password).then((cred) => {
+      return cred;
+    })
+  );
   }
 }

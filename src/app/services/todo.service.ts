@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { user } from '@angular/fire/auth';
 import {
   Firestore,
   collection,
@@ -23,13 +24,14 @@ export class TodoService {
     return collectionData(q, { idField: 'id' }); 
   }
 
-  addTodo(title: string, description: string): Observable<any> {
+  addTodo(title: string, description: string, userId: string): Observable<any> {
     const todoCollection = collection(this.firestore, 'todo-items');
     const addPromise = addDoc(todoCollection, {
       title,
       description,
       status: 'todo',
       priority: 0,
+      userId: userId,
       timestamp: serverTimestamp()
     });
     return from(addPromise); // convert Promise to Observable
