@@ -79,4 +79,44 @@ describe('LoginComponent', () => {
         signupButton.click();
         expect(routerMock.navigate).toHaveBeenCalledWith(['/signup']);
     });
+
+    it('should display "Email is required." when email is empty and touched', () => {
+        const emailControl = component.loginForm.get('email');
+        emailControl?.markAsTouched();
+        emailControl?.setValue('');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error') as HTMLElement;
+        expect(errorMessage.textContent).toContain('Email is required.');
+    });
+
+    it('should display "Invalid email format." when email is not valid and touched', () => {
+        const emailControl = component.loginForm.get('email');
+        emailControl?.markAsTouched();
+        emailControl?.setValue('hello@');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error') as HTMLElement;
+        expect(errorMessage.textContent).toContain('Invalid email format.');
+    });
+
+    it('should display "Password is required." when password is empty and touched', () => {
+        const passwordControl = component.loginForm.get('password');
+        passwordControl?.markAsTouched();
+        passwordControl?.setValue('');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error') as HTMLElement;
+        expect(errorMessage.textContent).toContain('Password is required.');
+    });
+    
+    it('should display "Minimum 6 characters." when password is less tha 6 characters and touched', () => {
+        const passwordControl = component.loginForm.get('password');
+        passwordControl?.markAsTouched();
+        passwordControl?.setValue('1234');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error') as HTMLElement;
+        expect(errorMessage.textContent).toContain('Minimum 6 characters.');
+    });
 });
