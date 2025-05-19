@@ -56,10 +56,10 @@ describe('LoginComponent', () => {
 
         authServiceMock.login.and.returnValue(of(mockUserCredential as UserCredential));
 
-        component.loginForm.setValue({ email: 'test@example.com', password: 'password123' });
+        component.loginForm.setValue({ email: 'test@example.com', password: '123456' });
         component.onSubmit();
 
-        expect(authServiceMock.login).toHaveBeenCalledWith('test@example.com', 'password123');
+        expect(authServiceMock.login).toHaveBeenCalledWith('test@example.com', '123456');
         expect(routerMock.navigate).toHaveBeenCalledWith(['/user', '123ABC', 'todos']);
     }));
 
