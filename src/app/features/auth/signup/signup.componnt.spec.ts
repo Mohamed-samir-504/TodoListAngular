@@ -81,7 +81,7 @@ describe('LoginComponent', () => {
         });
         component.onSubmit();
 
-        expect(authServiceMock.signUp).toHaveBeenCalledWith('John Doe','test@example.com', '123456');
+        expect(authServiceMock.signUp).toHaveBeenCalledWith('John Doe', 'test@example.com', '123456');
         expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
     }));
 
@@ -90,5 +90,68 @@ describe('LoginComponent', () => {
         loginButton.click();
         expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
     });
+
+    it('should display "Name is required." when name is empty and touched', () => {
+        const nameControl = component.signupForm.get('name');
+        nameControl?.markAsTouched();
+        nameControl?.setValue('');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error small');
+        expect(errorMessage?.textContent).toContain('Name is required.');
+    });
+
+    it('should display "Email is required." when email is empty and touched', () => {
+        const emailControl = component.signupForm.get('email');
+        emailControl?.markAsTouched();
+        emailControl?.setValue('');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error small');
+        expect(errorMessage?.textContent).toContain('Email is required.');
+    });
+
+    it('should display "Invalid email format." when email is invalid and touched', () => {
+        const emailControl = component.signupForm.get('email');
+        emailControl?.markAsTouched();
+        emailControl?.setValue('invalid@');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error small');
+        expect(errorMessage?.textContent).toContain('Invalid email format.');
+    });
+
+    it('should display "Password is required." when password is empty and touched', () => {
+        const passwordControl = component.signupForm.get('passwords.password');
+        passwordControl?.markAsTouched();
+        passwordControl?.setValue('');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error small');
+        expect(errorMessage?.textContent).toContain('Password is required.');
+    });
+
+    it('should display "Minimum 6 characters." when password is too short and touched', () => {
+        const passwordControl = component.signupForm.get('passwords.password');
+        passwordControl?.markAsTouched();
+        passwordControl?.setValue('123');
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error small');
+        expect(errorMessage?.textContent).toContain('Minimum 6 characters.');
+    });
+
+    it('should display "Passwords do not match." when confirmPassword does not match password', () => {
+        const passwordGroup = component.signupForm.get('passwords');
+        passwordGroup?.get('password')?.setValue('123456');
+        passwordGroup?.get('confirmPassword')?.setValue('123457');
+        passwordGroup?.get('confirmPassword')?.markAsTouched();
+
+        fixture.detectChanges();
+
+        const errorMessage = html.querySelector('.error small');
+        expect(errorMessage?.textContent).toContain('Passwords do not match.');
+    });
+
 
 })

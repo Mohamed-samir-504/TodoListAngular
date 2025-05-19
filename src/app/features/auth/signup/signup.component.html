@@ -4,7 +4,7 @@
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         <label>Name</label>
         <input type="name" formControlName="name" placeholder="Enter your name" />
-        <div class="error" *ngIf="signupForm.get('name')?.invalid && signupForm.get('email')?.touched">
+        <div class="error" *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched">
             <small *ngIf="signupForm.get('name')?.errors?.['required']">Name is required.</small>
         </div>
 
