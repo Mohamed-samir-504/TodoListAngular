@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { TabsComponent } from "./tabs/tabs.component";
 import { AddFormComponent } from "./add-form/add-form.component";
 import { SearchFormComponent } from "./search-form/search-form.component";
