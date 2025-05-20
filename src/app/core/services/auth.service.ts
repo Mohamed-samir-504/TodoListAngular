@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -51,8 +51,7 @@ export class AuthService {
         const user = {
           uid: response.localId,
           name: response.name,
-          email: response.email,
-          idToken: response.idToken
+          email: response.email          
         };
         this.userSubject.next(user);
         return of(user);

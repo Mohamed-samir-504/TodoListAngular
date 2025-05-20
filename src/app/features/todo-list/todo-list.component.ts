@@ -15,8 +15,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TodoListComponent {
 
-  private todosSub!: Subscription;
-
   todos: any[] = [];
   activeTab: string = 'todo';
   searchText: string = '';
@@ -28,10 +26,9 @@ export class TodoListComponent {
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('userId')!;
 
-    this.todosSub = this.todoService.getTodos().subscribe({
+    this.todoService.getTodos().subscribe({
       next: (todos) => {
         this.todos = todos;
-
       },
       error: (error) => {
         console.error('Error fetching todos:', error);
@@ -120,10 +117,6 @@ export class TodoListComponent {
         }
       });
     }
-  }
-
-  ngOnDestroy(): void {
-    this.todosSub.unsubscribe();
   }
 
 

@@ -54,7 +54,6 @@ export class SignupComponent {
 
       this.authService.signUp(name!, email!, password!).subscribe({
         next: () => {
-          //console.log('Signed up:', cred.uid);
           this.router.navigate(['/login']);
         },
         error: (err) => {
