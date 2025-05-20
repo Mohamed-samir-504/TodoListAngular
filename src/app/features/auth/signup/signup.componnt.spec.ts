@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { SignupComponent } from './signup.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserCredential } from '@angular/fire/auth';
@@ -9,7 +9,7 @@ import { UserCredential } from '@angular/fire/auth';
 let authServiceMock: jasmine.SpyObj<AuthService>;
 let routerMock: jasmine.SpyObj<Router>;
 
-describe('LoginComponent', () => {
+describe('SignupComponent', () => {
     let component: SignupComponent;
     let fixture: ComponentFixture<SignupComponent>;
     let html: HTMLElement;

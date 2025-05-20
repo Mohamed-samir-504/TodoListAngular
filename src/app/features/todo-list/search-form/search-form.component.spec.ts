@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchFormComponent } from './search-form.component';
 import { FormsModule } from '@angular/forms';
 
-describe('AddFormComponent', () => {
+describe('SearchFormComponent', () => {
     let component: SearchFormComponent;
     let fixture: ComponentFixture<SearchFormComponent>;
     let html: HTMLElement;
