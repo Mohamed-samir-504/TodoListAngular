@@ -30,7 +30,7 @@ export class LoginComponent {
       console.log('Login submitted:', email, password);
       this.authService.login(email!, password!).subscribe({
         next: (cred) => {
-          this.router.navigate(['/user', cred.user.uid, 'todos']);
+          this.router.navigate(['/user', cred.uid, 'todos']);
         },
         error: (err) => {
           console.error('Login failed:', err.message);

@@ -1,34 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, from, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TodoService {
-  private readonly baseUrl = 'https://firestore.googleapis.com/v1/projects/todolist-dd189/databases/(default)/documents/todo-items';
-  private readonly apiKey = 'AIzaSyAHfTgwgSamL-iR3PT4lqZZ219aqWZ-PZE';
+  private apiKey = environment.firebaseApiKey;
+  private projectId = environment.firebaseProjectId;
+  private databaseURL = environment.firestoreBaseUrl;
+  private baseUrl = `${this.databaseURL}/${this.projectId}/databases/(default)/documents/todo-items`;
 
   constructor(private http: HttpClient) { }
 
   getTodos(): Observable<any> {
     const url = `${this.baseUrl}?key=${this.apiKey}`;
     return this.http.get<any>(url).pipe(
-
-      map(response => {
-        console.log('Response:', response);
-        if (!response.documents) return [];
-        return response.documents.map((doc: any) => {
-          const fields = doc.fields;
-          return {
-            id: doc.name.split('/').pop(),
-            title: fields.title.stringValue,
-            description: fields.description.stringValue,
-            status: fields.status.stringValue,
-            priority: fields.priority.booleanValue,
-            userId: fields.userId.stringValue,
-            timestamp: new Date(fields.timestamp.timestampValue)
-          };
-        });
-      })
+      map(response => this.responseToArray(response)),
     );
   }
 
@@ -70,5 +57,21 @@ export class TodoService {
       }
     };
     return this.http.patch(url, body);
+  }
+
+  responseToArray(response: any): any[] {
+    if (!response.documents) return [];
+    return response.documents.map((doc: any) => {
+      const fields = doc.fields;
+      return {
+        id: doc.name.split('/').pop(),
+        title: fields.title.stringValue,
+        description: fields.description.stringValue,
+        status: fields.status.stringValue,
+        priority: fields.priority.booleanValue,
+        userId: fields.userId.stringValue,
+        timestamp: new Date(fields.timestamp.timestampValue)
+      };
+    });
   }
 }

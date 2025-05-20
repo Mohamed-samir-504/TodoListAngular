@@ -53,8 +53,8 @@ export class SignupComponent {
       const password = this.signupForm.get('passwords.password')?.value;
 
       this.authService.signUp(name!, email!, password!).subscribe({
-        next: (cred) => {
-          console.log('Signed up:', cred.user.uid);
+        next: () => {
+          //console.log('Signed up:', cred.uid);
           this.router.navigate(['/login']);
         },
         error: (err) => {
