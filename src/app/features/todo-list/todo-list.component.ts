@@ -4,7 +4,7 @@ import { AddFormComponent } from "./add-form/add-form.component";
 import { SearchFormComponent } from "./search-form/search-form.component";
 import { TodoItemComponent } from "./todo-item/todo-item.component";
 import { TodoService } from './todo.service';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -15,23 +15,21 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TodoListComponent {
 
-  private todosSub!: Subscription;
-
   todos: any[] = [];
   activeTab: string = 'todo';
   searchText: string = '';
   userId!: string;
 
 
-  constructor(private todoService: TodoService, private route: ActivatedRoute) {}
+  constructor(private todoService: TodoService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('userId')!;
 
-    this.todosSub = this.todoService.getTodos().subscribe({
+    this.todoService.getTodos(this.userId).subscribe({
       next: (todos) => {
+        console.log('Todos:', todos);
         this.todos = todos;
-
       },
       error: (error) => {
         console.error('Error fetching todos:', error);
@@ -42,16 +40,17 @@ export class TodoListComponent {
 
   get filteredTodos() {
     return this.todos
-      .filter(todo => todo.userId === this.userId)
       .filter(todo => todo.status === this.activeTab)
       .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
       .sort((a, b) => {
-        if (a.priority === false && b.priority === false) {
-          const aTime = a.timestamp?.toDate?.().getTime?.() ?? 0;
-          const bTime = b.timestamp?.toDate?.().getTime?.() ?? 0;
-          return bTime - aTime; // Newer first
+        if (a.priority !== b.priority) {
+          return b.priority - a.priority;
         }
-        return b.priority - a.priority;
+
+        // If both priorities are the same, sort by timestamp (newest first)
+        const aTime = a.timestamp?.getTime?.() ?? 0;
+        const bTime = b.timestamp?.getTime?.() ?? 0;
+        return bTime - aTime;
       });
   }
 
@@ -64,35 +63,41 @@ export class TodoListComponent {
     this.searchText = searchedText;
   }
 
-  onAddTodo(todo: { title: string, description: string }) {
-    this.todoService.addTodo(todo.title, todo.description, this.userId).subscribe({
-      next: () => {
-        console.log('Todo added successfully');
+  onAddTodo(todo: { title: string, description: string }): void {
+    this.todoService.addTodo(todo.title, todo.description, this.userId).pipe(
+      switchMap(() => this.todoService.getTodos(this.userId))
+    ).subscribe({
+      next: (todos) => {
+        this.todos = todos;
       },
-      error: (error) => {
-        console.error('Error adding todo:', error);
+      error: (err) => {
+        console.error('Error:', err);
       }
     });
   }
 
   onDeleteTodo(todoId: string) {
-    this.todoService.deleteTodo(todoId).subscribe({
-      next: () => {
-        console.log('Todo deleted successfully');
+    this.todoService.deleteTodo(todoId).pipe(
+      switchMap(() => this.todoService.getTodos(this.userId))
+    ).subscribe({
+      next: (todos) => {
+        this.todos = todos;
       },
-      error: (error) => {
-        console.error('Error deleting todo:', error);
+      error: (err) => {
+        console.error('Error:', err);
       }
     });
   }
 
   onCompleteTodo(todoId: string) {
-    this.todoService.updateStatus(todoId, "completed").subscribe({
-      next: () => {
-        console.log('Todo completed successfully');
+    this.todoService.updateStatus(todoId, "completed").pipe(
+      switchMap(() => this.todoService.getTodos(this.userId))
+    ).subscribe({
+      next: (todos) => {
+        this.todos = todos;
       },
-      error: (error) => {
-        console.error('Error completing todo:', error);
+      error: (err) => {
+        console.error('Error:', err);
       }
     });
   }
@@ -101,19 +106,17 @@ export class TodoListComponent {
     const todo = this.todos.find(todo => todo.id === todoId);
     if (todo) {
       const newPriority = todo.priority ? false : true;
-      this.todoService.updatePriority(todoId, newPriority).subscribe({
-        next: () => {
-          console.log('Todo priority updated successfully');
+      this.todoService.updatePriority(todoId, newPriority).pipe(
+        switchMap(() => this.todoService.getTodos(this.userId))
+      ).subscribe({
+        next: (todos) => {
+          this.todos = todos;
         },
-        error: (error) => {
-          console.error('Error updating todo priority:', error);
+        error: (err) => {
+          console.error('Error:', err);
         }
       });
     }
-  }
-
-  ngOnDestroy(): void {
-    this.todosSub.unsubscribe();
   }
 
 

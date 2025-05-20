@@ -1,41 +1,61 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, User, UserCredential } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, serverTimestamp, getDoc } from '@angular/fire/firestore';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  
-  private userSubject = new BehaviorSubject<User | null>(null);
+
+  private apiKey = environment.firebaseApiKey;
+  private projectId = environment.firebaseProjectId;
+  private authBaseUrl = environment.authBaseUrl;
+  private databaseURL = environment.firestoreBaseUrl;
+  private userSubject = new BehaviorSubject<any | null>(null);
   user$ = this.userSubject.asObservable();
 
-  constructor(private auth: Auth, private firestore: Firestore) {
-    onAuthStateChanged(this.auth, user => {
-      this.userSubject.next(user);
-    });
-  }
+  constructor(private http: HttpClient) { }
 
-  
-  signUp(name: string, email: string, password: string): Observable<UserCredential> {
-    return from(
-      createUserWithEmailAndPassword(this.auth, email, password).then((cred) => {
-        const uid = cred.user.uid;
+  signUp(name: string, email: string, password: string): Observable<any> {
+    const signupUrl = `${this.authBaseUrl}:signUp?key=${this.apiKey}`;
 
-        const userDoc = doc(this.firestore, 'users', uid);
-        return setDoc(userDoc, {
-          uid,
-          name,
-          email,
-          createdAt: serverTimestamp()
-        }).then(() => cred);
+    return this.http.post<any>(signupUrl, {
+      email,
+      password,
+      returnSecureToken: true
+    }).pipe(
+      switchMap((response) => {
+        
+        const userDocUrl = `${this.databaseURL}/${this.projectId}/databases/(default)/documents/users/${response.localId}`;
+        const userDocBody = {
+          fields: {
+            uid: { stringValue: response.localId },
+            name: { stringValue: name },
+            email: { stringValue: email },
+            createdAt: { timestampValue: new Date().toISOString() }
+          }
+        };
+        return this.http.patch(userDocUrl + `?key=${this.apiKey}`, userDocBody)
       })
     );
   }
 
+  login(email: string, password: string): Observable<any> {
+    const loginUrl = `${this.authBaseUrl}:signInWithPassword?key=${this.apiKey}`;
 
-  login(email: string, password: string): Observable<UserCredential> {
-    return from(
-      signInWithEmailAndPassword(this.auth, email, password)
+    return this.http.post<any>(loginUrl, {
+      email,
+      password,
+      returnSecureToken: true
+    }).pipe(
+      switchMap((response) => {
+        const user = {
+          uid: response.localId,
+          name: response.name,
+          email: response.email          
+        };
+        this.userSubject.next(user);
+        return of(user);
+      })
     );
   }
 }
