@@ -100,28 +100,28 @@ describe('TodoListComponent', () => {
     });
 
     
-    it('should call addTodo on the service with correct parameters when adding a new todo', () => {
+    it('should call addTodo on the service with correct parameters', () => {
         todoServiceMock.addTodo.and.returnValue(of({}));
         component.onAddTodo({ title: 'New Task', description: 'Desc' });
         expect(todoServiceMock.addTodo).toHaveBeenCalledWith('New Task', 'Desc', 'u1');
     });
 
     it('should call deleteTodo on the service and delete todo', () => {
-        todoServiceMock.deleteTodo.and.returnValue(of(undefined));
+        todoServiceMock.deleteTodo.and.returnValue(of({}));
         component.onDeleteTodo('1');
         expect(todoServiceMock.deleteTodo).toHaveBeenCalledWith('1');
         expect(component.todos.length).toBe(2);
     });
 
     it('should call updateStatus on the service and update todo', () => {
-        todoServiceMock.updateStatus.and.returnValue(of(undefined));
+        todoServiceMock.updateStatus.and.returnValue(of({}));
         component.onCompleteTodo('1');
         expect(todoServiceMock.updateStatus).toHaveBeenCalledWith('1', 'completed');
         expect(component.todos[0].status).toBe('completed');
     });
 
     it('should call updatePriority on the service and update todo', () => {
-        todoServiceMock.updatePriority.and.returnValue(of(undefined));
+        todoServiceMock.updatePriority.and.returnValue(of({}));
         const newPriority = !component.todos[0].priority;
         component.onTogglePriority('1');
         expect(todoServiceMock.updatePriority).toHaveBeenCalledWith('1', newPriority);
