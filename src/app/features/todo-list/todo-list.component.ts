@@ -46,7 +46,7 @@ export class TodoListComponent {
       .filter(todo => todo.status === this.activeTab)
       .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
       .sort((a, b) => {
-        if (a.priority === 0 && b.priority === 0) {
+        if (a.priority === false && b.priority === false) {
           const aTime = a.timestamp?.toDate?.().getTime?.() ?? 0;
           const bTime = b.timestamp?.toDate?.().getTime?.() ?? 0;
           return bTime - aTime; // Newer first
@@ -108,7 +108,7 @@ export class TodoListComponent {
   onTogglePriority(todoId: string) {
     const todo = this.todos.find(todo => todo.id === todoId);
     if (todo) {
-      const newPriority = todo.priority ? 0 : 1;
+      const newPriority = todo.priority ? false : true;
       this.todoService.updatePriority(todoId, newPriority).subscribe({
         next: () => {
           console.log('Todo priority updated successfully');
