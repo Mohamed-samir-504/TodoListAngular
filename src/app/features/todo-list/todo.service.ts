@@ -37,17 +37,17 @@ export class TodoService {
     return from(addPromise); // convert Promise to Observable
   }
 
-  deleteTodo(id: string): Observable<void> {
+  deleteTodo(id: string): Observable<any> {
     const deletePromise = deleteDoc(doc(this.firestore, 'todo-items', id));
     return from(deletePromise);
   }
 
-  updateStatus(id: string, status: string): Observable<void> {
+  updateStatus(id: string, status: string): Observable<any> {
     const updatePromise = updateDoc(doc(this.firestore, 'todo-items', id), { status: status});
     return from(updatePromise);
   }
 
-  updatePriority(id: string, priority: boolean): Observable<void> {
+  updatePriority(id: string, priority: boolean): Observable<any> {
     const updatePromise = updateDoc(doc(this.firestore, 'todo-items', id), { priority: priority });
     return from(updatePromise);
   }
