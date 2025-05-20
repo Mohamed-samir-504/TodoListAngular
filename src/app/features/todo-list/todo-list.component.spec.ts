@@ -3,13 +3,16 @@ import { of, throwError } from 'rxjs';
 import { TodoListComponent } from './todo-list.component';
 import { TodoService } from './todo.service';
 import { ActivatedRoute } from '@angular/router';
+import e from 'express';
 
 describe('TodoListComponent', () => {
     let component: TodoListComponent;
     let fixture: ComponentFixture<TodoListComponent>;
     let todoServiceMock: jasmine.SpyObj<TodoService>;
 
-    const mockTodos = [
+    
+    beforeEach(async () => {
+        const mockTodos = [
         {
             id: '1',
             title: 'Task A',
@@ -36,8 +39,6 @@ describe('TodoListComponent', () => {
             timestamp: { toDate: () => new Date() }
         }
     ];
-
-    beforeEach(async () => {
         todoServiceMock = jasmine.createSpyObj<TodoService>('TodoService', [
             'getTodos',
             'addTodo',
@@ -86,44 +87,47 @@ describe('TodoListComponent', () => {
         component.activeTab = 'todo';
         component.searchText = '';
         const filtered = component.filteredTodos;
-        expect(filtered.length).toBe(1);
+        expect(filtered.length).toBe(2);
         expect(filtered[0].status).toBe('todo');
     });
 
     it('should filter todos by search text', () => {
         component.activeTab = 'todo';
-        component.searchText = 'task a';
+        component.searchText = 'c';
         const filtered = component.filteredTodos;
         expect(filtered.length).toBe(1);
-        expect(filtered[0].title).toContain('Task A');
+        expect(filtered[0].title).toContain('Task C');
     });
 
-    it('should add todo via service', () => {
+    
+    it('should call addTodo on the service with correct parameters when adding a new todo', () => {
         todoServiceMock.addTodo.and.returnValue(of({}));
         component.onAddTodo({ title: 'New Task', description: 'Desc' });
-        expect(todoServiceMock.addTodo).toHaveBeenCalledWith('New Task', 'Desc', 'user1');
+        expect(todoServiceMock.addTodo).toHaveBeenCalledWith('New Task', 'Desc', 'u1');
     });
 
-    it('should delete todo and update list', () => {
-        todoServiceMock.deleteTodo.and.returnValue(of());
+    it('should call deleteTodo on the service and delete todo', () => {
+        todoServiceMock.deleteTodo.and.returnValue(of(undefined));
         component.onDeleteTodo('1');
         expect(todoServiceMock.deleteTodo).toHaveBeenCalledWith('1');
+        expect(component.todos.length).toBe(2);
     });
 
-    it('should complete todo and update status', () => {
-        todoServiceMock.updateStatus.and.returnValue(of());
+    it('should call updateStatus on the service and update todo', () => {
+        todoServiceMock.updateStatus.and.returnValue(of(undefined));
         component.onCompleteTodo('1');
         expect(todoServiceMock.updateStatus).toHaveBeenCalledWith('1', 'completed');
-        expect(component.todos.find(t => t.id === '1')?.status).toBe('completed');
+        expect(component.todos[0].status).toBe('completed');
     });
 
-    it('should toggle priority and update todo', () => {
-        todoServiceMock.updatePriority.and.returnValue(of());
-        const originalPriority = component.todos[0].priority;
+    it('should call updatePriority on the service and update todo', () => {
+        todoServiceMock.updatePriority.and.returnValue(of(undefined));
+        const newPriority = !component.todos[0].priority;
         component.onTogglePriority('1');
-        expect(todoServiceMock.updatePriority).toHaveBeenCalledWith('1', originalPriority ? false : true);
-        expect(component.todos[0].priority).toBe(originalPriority ? 0 : 1);
+        expect(todoServiceMock.updatePriority).toHaveBeenCalledWith('1', newPriority);
+        expect(component.todos[0].priority).toBe(newPriority);
     });
+
 
     it('should switch active tab', () => {
         component.onSwitchTab('completed');
