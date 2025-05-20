@@ -23,8 +23,12 @@ export class TodoListComponent {
   userId!: string;
 
 
-  constructor(private todoService: TodoService, private route: ActivatedRoute) {
-    this.todosSub = todoService.getTodos().subscribe({
+  constructor(private todoService: TodoService, private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.userId = this.route.snapshot.paramMap.get('userId')!;
+
+    this.todosSub = this.todoService.getTodos().subscribe({
       next: (todos) => {
         this.todos = todos;
 
@@ -33,11 +37,7 @@ export class TodoListComponent {
         console.error('Error fetching todos:', error);
       }
     });
-  }
 
-  ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('userId')!;
-    console.log('User ID:', this.userId);
   }
 
   get filteredTodos() {
