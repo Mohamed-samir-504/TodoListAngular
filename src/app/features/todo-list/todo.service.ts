@@ -12,10 +12,23 @@ export class TodoService {
 
   constructor(private http: HttpClient) { }
 
-  getTodos(): Observable<any> {
-    const url = `${this.baseUrl}?key=${this.apiKey}`;
-    return this.http.get<any>(url).pipe(
+  getTodos(userId: string): Observable<any> {
+    const url = `https://firestore.googleapis.com/v1/projects/${this.projectId}/databases/(default)/documents:runQuery?key=${this.apiKey}`;
+    const body = {
+      structuredQuery: {
+        from: [{ collectionId: 'todo-items' }],
+        where: {
+          fieldFilter: {
+            field: { fieldPath: 'userId' },
+            op: 'EQUAL',
+            value: { stringValue: userId }
+          }
+        }
+      }
+    };
+    return this.http.post<any>(url, body).pipe(
       map(response => this.responseToArray(response)),
+
     );
   }
 
@@ -59,12 +72,22 @@ export class TodoService {
     return this.http.patch(url, body);
   }
 
-  responseToArray(response: any): any[] {
-    if (!response.documents) return [];
-    return response.documents.map((doc: any) => {
-      const fields = doc.fields;
+  responseToArray(response: any[]): any[] {
+    if (!response || response.length === 0) {
+      return [];
+    }
+    // Because the response might contain other types of objects besides documents,
+    // If there is no todos for the user, the response contains an object and it is not an empty array
+    const validDocs = response.filter(r => r.document);
+
+    if (validDocs.length === 0) {
+      return [];
+    }
+
+    return validDocs.map((r: any) => {
+      const fields = r.document.fields;
       return {
-        id: doc.name.split('/').pop(),
+        id: r.document.name.split('/').pop(),
         title: fields.title.stringValue,
         description: fields.description.stringValue,
         status: fields.status.stringValue,

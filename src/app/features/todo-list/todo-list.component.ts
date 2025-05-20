@@ -26,8 +26,9 @@ export class TodoListComponent {
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('userId')!;
 
-    this.todoService.getTodos().subscribe({
+    this.todoService.getTodos(this.userId).subscribe({
       next: (todos) => {
+        console.log('Todos:', todos);
         this.todos = todos;
       },
       error: (error) => {
@@ -39,7 +40,6 @@ export class TodoListComponent {
 
   get filteredTodos() {
     return this.todos
-      .filter(todo => todo.userId === this.userId)
       .filter(todo => todo.status === this.activeTab)
       .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
       .sort((a, b) => {
@@ -65,7 +65,7 @@ export class TodoListComponent {
 
   onAddTodo(todo: { title: string, description: string }): void {
     this.todoService.addTodo(todo.title, todo.description, this.userId).pipe(
-      switchMap(() => this.todoService.getTodos())
+      switchMap(() => this.todoService.getTodos(this.userId))
     ).subscribe({
       next: (todos) => {
         this.todos = todos;
@@ -78,7 +78,7 @@ export class TodoListComponent {
 
   onDeleteTodo(todoId: string) {
     this.todoService.deleteTodo(todoId).pipe(
-      switchMap(() => this.todoService.getTodos())
+      switchMap(() => this.todoService.getTodos(this.userId))
     ).subscribe({
       next: (todos) => {
         this.todos = todos;
@@ -91,7 +91,7 @@ export class TodoListComponent {
 
   onCompleteTodo(todoId: string) {
     this.todoService.updateStatus(todoId, "completed").pipe(
-      switchMap(() => this.todoService.getTodos())
+      switchMap(() => this.todoService.getTodos(this.userId))
     ).subscribe({
       next: (todos) => {
         this.todos = todos;
@@ -107,7 +107,7 @@ export class TodoListComponent {
     if (todo) {
       const newPriority = todo.priority ? false : true;
       this.todoService.updatePriority(todoId, newPriority).pipe(
-        switchMap(() => this.todoService.getTodos())
+        switchMap(() => this.todoService.getTodos(this.userId))
       ).subscribe({
         next: (todos) => {
           this.todos = todos;
