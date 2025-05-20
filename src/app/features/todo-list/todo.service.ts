@@ -30,7 +30,7 @@ export class TodoService {
       title,
       description,
       status: 'todo',
-      priority: 0,
+      priority: false,
       userId: userId,
       timestamp: serverTimestamp()
     });
@@ -47,7 +47,7 @@ export class TodoService {
     return from(updatePromise);
   }
 
-  updatePriority(id: string, priority: number): Observable<void> {
+  updatePriority(id: string, priority: boolean): Observable<void> {
     const updatePromise = updateDoc(doc(this.firestore, 'todo-items', id), { priority: priority });
     return from(updatePromise);
   }
