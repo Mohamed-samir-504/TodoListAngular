@@ -79,10 +79,6 @@ export class TodoListComponent {
     this.todoService.deleteTodo(todoId).subscribe({
       next: () => {
         console.log('Todo deleted successfully');
-        const index = this.todos.findIndex(todo => todo.id === todoId);
-        if (index !== -1) {
-          this.todos.splice(index, 1);
-        }
       },
       error: (error) => {
         console.error('Error deleting todo:', error);
@@ -94,10 +90,6 @@ export class TodoListComponent {
     this.todoService.updateStatus(todoId, "completed").subscribe({
       next: () => {
         console.log('Todo completed successfully');
-        const todo = this.todos.find(todo => todo.id === todoId);
-        if (todo) {
-          todo.status = 'completed';
-        }
       },
       error: (error) => {
         console.error('Error completing todo:', error);
@@ -112,7 +104,6 @@ export class TodoListComponent {
       this.todoService.updatePriority(todoId, newPriority).subscribe({
         next: () => {
           console.log('Todo priority updated successfully');
-          todo.priority = newPriority;
         },
         error: (error) => {
           console.error('Error updating todo priority:', error);
