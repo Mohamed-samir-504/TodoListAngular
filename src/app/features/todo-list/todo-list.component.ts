@@ -27,33 +27,33 @@ export class TodoListComponent {
     this.todosSub = todoService.getTodos().subscribe({
       next: (todos) => {
         this.todos = todos;
-        
+
       },
       error: (error) => {
         console.error('Error fetching todos:', error);
       }
     });
-   }
+  }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('userId')!;
     console.log('User ID:', this.userId);
   }
 
   get filteredTodos() {
-  return this.todos
-    .filter(todo => todo.userId === this.userId)
-    .filter(todo => todo.status === this.activeTab)
-    .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
-    .sort((a, b) => {
-      if (a.priority === 0 && b.priority === 0) {
-        const aTime = a.timestamp?.toDate?.().getTime?.() ?? 0;
-        const bTime = b.timestamp?.toDate?.().getTime?.() ?? 0;
-        return bTime - aTime; // Newer first
-      }
-      return b.priority - a.priority;
-    });
-}
+    return this.todos
+      .filter(todo => todo.userId === this.userId)
+      .filter(todo => todo.status === this.activeTab)
+      .filter(todo => todo.title.toLowerCase().includes(this.searchText.toLowerCase()))
+      .sort((a, b) => {
+        if (a.priority === 0 && b.priority === 0) {
+          const aTime = a.timestamp?.toDate?.().getTime?.() ?? 0;
+          const bTime = b.timestamp?.toDate?.().getTime?.() ?? 0;
+          return bTime - aTime; // Newer first
+        }
+        return b.priority - a.priority;
+      });
+  }
 
 
   onSwitchTab(selectedTab: string) {
@@ -79,7 +79,10 @@ export class TodoListComponent {
     this.todoService.deleteTodo(todoId).subscribe({
       next: () => {
         console.log('Todo deleted successfully');
-        this.todos = this.todos.filter(todo => todo.id !== todoId);
+        const index = this.todos.findIndex(todo => todo.id === todoId);
+        if (index !== -1) {
+          this.todos.splice(index, 1);
+        }
       },
       error: (error) => {
         console.error('Error deleting todo:', error);
