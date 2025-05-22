@@ -1,5 +1,9 @@
-<main>
-  <div class="container">
+<!-- The app waits for auth status to be true before rendering anything -->
+<!-- The authReady status becomes true when autoLogin returns
+ (whether there is a user authenticated or not) -->
+<!-- So that the userSubject is set correctly to (User or null) before the auth guard checks the route -->
+<main *ngIf="authService.authReady|async;">
+  <div class="container" >
     <router-outlet></router-outlet>
   </div>
 </main>

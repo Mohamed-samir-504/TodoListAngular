@@ -1,3 +1,5 @@
+<app-logout/>
+
 <h1>My Todos</h1>
 
 <app-tabs (selectedTab)="onSwitchTab($event)" />
@@ -7,7 +9,6 @@
 
 <app-search-form (searchedText)="onSearchInput($event)" />
 }
-
 
 
 @for(todo of filteredTodos; track todo.id){

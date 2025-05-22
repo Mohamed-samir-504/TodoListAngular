@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -29,8 +29,8 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       console.log('Login submitted:', email, password);
       this.authService.login(email!, password!).subscribe({
-        next: (cred) => {
-          this.router.navigate(['/user', cred.uid, 'todos']);
+        next: (userId) => {
+          this.router.navigateByUrl('/user/' + userId + '/todos', { replaceUrl: true });
         },
         error: (err) => {
           console.error('Login failed:', err.message);
@@ -40,6 +40,6 @@ export class LoginComponent {
     }
   }
   goToSignup(): void {
-    this.router.navigate(['/signup']);
+    this.router.navigateByUrl('/signup' , { replaceUrl: true });  
   }
 }
