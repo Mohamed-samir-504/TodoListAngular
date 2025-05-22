@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './auth/auth.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -11,4 +13,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'TodoListAngular';
+  private authService = inject(AuthService);
+  ngOnInit() {
+    this.authService.autoLogin();
+  }
 }

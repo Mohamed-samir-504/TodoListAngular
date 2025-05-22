@@ -7,7 +7,7 @@ export const routes: Routes = [
     {
         path: '',
         redirectTo: 'login',
-        pathMatch: 'full'
+        pathMatch: 'prefix'
     },
     {
         path: 'login',

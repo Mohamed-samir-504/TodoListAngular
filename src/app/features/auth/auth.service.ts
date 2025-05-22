@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from './user.model';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -11,10 +12,13 @@ export class AuthService {
   private projectId = environment.firebaseProjectId;
   private authBaseUrl = environment.authBaseUrl;
   private databaseURL = environment.firestoreBaseUrl;
-  private userSubject = new BehaviorSubject<User|null>(null);
-  user$ = this.userSubject.asObservable();
+  private tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient) { }
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$ = this.userSubject.asObservable();
+  
+
+  constructor(private http: HttpClient, private router: Router) { }
 
   signUp(name: string, email: string, password: string): Observable<any> {
     const signupUrl = `${this.authBaseUrl}:signUp?key=${this.apiKey}`;
@@ -25,7 +29,6 @@ export class AuthService {
       returnSecureToken: true
     }).pipe(
       switchMap((response) => {
-        
         const userDocUrl = `${this.databaseURL}/${this.projectId}/databases/(default)/documents/users/${response.localId}`;
         const userDocBody = {
           fields: {
@@ -35,7 +38,15 @@ export class AuthService {
             createdAt: { timestampValue: new Date().toISOString() }
           }
         };
-        return this.http.patch(userDocUrl + `?key=${this.apiKey}`, userDocBody)
+        const expirationDate = new Date(new Date().getTime() + response.expiresIn * 1000);
+        const user = new User(email, response.localId, response.idToken, expirationDate);
+        this.userSubject.next(user);
+
+        return this.http.patch(userDocUrl + `?key=${this.apiKey}`, userDocBody).pipe(
+          tap(() => {
+            this.userSubject.next(null);
+          })
+        )
       })
     );
   }
@@ -50,15 +61,59 @@ export class AuthService {
     }).pipe(
       switchMap((response) => {
         console.log('Login response:', response);
-        const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-        const user = new User(response.email, response.localId, response.idToken, expirationDate);
+        const expirationDate = new Date(new Date().getTime() + response.expiresIn * 1000);
+        const user = new User(email, response.localId, response.idToken, expirationDate);
         this.userSubject.next(user);
-        return of(user);
+        sessionStorage.setItem('userData', JSON.stringify(user));
+        //usually an hour
+        this.autoLogout(response.expiresIn * 1000);
+
+        return of(response.localId);
       })
     );
   }
 
   logout() {
     this.userSubject.next(null);
+    sessionStorage.removeItem('userData');
+    this.router.navigate(['/login']);
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    this.tokenExpirationTimer = null;
   }
+
+  autoLogin() {
+    if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+      return;
+    }
+
+    const userDataString = sessionStorage.getItem('userData');
+    if (!userDataString) {
+      return;
+    }
+    const userData = JSON.parse(userDataString);
+
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    );
+
+    if (loadedUser.token) {
+      this.userSubject.next(loadedUser);
+      const expirationDuration =
+        new Date(userData._tokenExpirationDate).getTime() -
+        new Date().getTime();
+      this.autoLogout(expirationDuration);
+    }
+  }
+
+  autoLogout(expirationDuration: number) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, expirationDuration);
+  }
+
 }

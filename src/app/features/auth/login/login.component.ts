@@ -29,8 +29,8 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       console.log('Login submitted:', email, password);
       this.authService.login(email!, password!).subscribe({
-        next: (cred) => {
-          this.router.navigate(['/user', cred.id, 'todos']);
+        next: (userId) => {
+          this.router.navigate(['/user', userId, 'todos']);
         },
         error: (err) => {
           console.error('Login failed:', err.message);
