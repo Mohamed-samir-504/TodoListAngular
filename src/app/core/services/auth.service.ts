@@ -56,7 +56,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<any> {
     const loginUrl = `${this.authBaseUrl}:signInWithPassword?key=${this.apiKey}`;
-
+    console.log('Calling HTTP POST to:', loginUrl);
     return this.http.post<any>(loginUrl, {
       email,
       password,
@@ -70,7 +70,7 @@ export class AuthService {
         sessionStorage.setItem('userData', JSON.stringify(user));
         //usually an hour
         this.autoLogout(response.expiresIn * 1000);
-
+        
         return of(response.localId);
       })
     );

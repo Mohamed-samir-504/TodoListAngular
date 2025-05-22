@@ -3,8 +3,6 @@ import { of, throwError } from 'rxjs';
 import { TodoListComponent } from './todo-list.component';
 import { TodoService } from './todo.service';
 import { ActivatedRoute } from '@angular/router';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 
 describe('TodoListComponent', () => {
@@ -13,35 +11,35 @@ describe('TodoListComponent', () => {
     let todoServiceMock: jasmine.SpyObj<TodoService>;
     let authServiceMock: jasmine.SpyObj<AuthService>;
 
+    const mockTodos = [
+        {
+            id: '1',
+            title: 'Task A',
+            description: 'Task A description',
+            userId: 'u1', status: 'todo',
+            priority: false,
+            timestamp: { toDate: () => new Date() }
+        },
+
+        {
+            id: '2',
+            title: 'Task B',
+            description: 'Task B description',
+            userId: 'u1', status: 'completed',
+            priority: false,
+            timestamp: { toDate: () => new Date() }
+        },
+        {
+            id: '3',
+            title: 'Task C',
+            description: 'Task C description',
+            userId: 'u1', status: 'todo',
+            priority: true,
+            timestamp: { toDate: () => new Date() }
+        }
+    ];
 
     beforeEach(async () => {
-        const mockTodos = [
-            {
-                id: '1',
-                title: 'Task A',
-                description: 'Task A description',
-                userId: 'u1', status: 'todo',
-                priority: false,
-                timestamp: { toDate: () => new Date() }
-            },
-
-            {
-                id: '2',
-                title: 'Task B',
-                description: 'Task B description',
-                userId: 'u1', status: 'completed',
-                priority: false,
-                timestamp: { toDate: () => new Date() }
-            },
-            {
-                id: '3',
-                title: 'Task C',
-                description: 'Task C description',
-                userId: 'u1', status: 'todo',
-                priority: true,
-                timestamp: { toDate: () => new Date() }
-            }
-        ];
         todoServiceMock = jasmine.createSpyObj<TodoService>('TodoService', [
             'getTodos',
             'addTodo',
@@ -49,24 +47,24 @@ describe('TodoListComponent', () => {
             'updateStatus',
             'updatePriority'
         ]);
-        
+
         // Because TodoListComponent imports Logout component that uses AuthService
         authServiceMock = jasmine.createSpyObj<AuthService>('AuthService', ['logout']);
         await TestBed.configureTestingModule({
             imports: [TodoListComponent],
             providers: [
-            { provide: TodoService, useValue: todoServiceMock },
-            { provide: AuthService, useValue: authServiceMock },
-            {
-                provide: ActivatedRoute,
-                useValue: {
-                    snapshot: {
-                        paramMap: {
-                            get: () => 'u1' //This simulates route.snapshot.paramMap.get('userId')
+                { provide: TodoService, useValue: todoServiceMock },
+                { provide: AuthService, useValue: authServiceMock },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: () => 'u1' //This simulates route.snapshot.paramMap.get('userId')
+                            }
                         }
                     }
                 }
-            }
             ]
         }).compileComponents();
 
