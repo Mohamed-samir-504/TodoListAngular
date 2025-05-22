@@ -1,10 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { AuthService } from './auth/auth.service';
 
 describe('AppComponent', () => {
+  let authServiceMock: jasmine.SpyObj<AuthService>;
+  
   beforeEach(async () => {
+    authServiceMock = jasmine.createSpyObj<AuthService>('AuthService', ['autoLogin']);
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
   });
 

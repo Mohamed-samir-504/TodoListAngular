@@ -3,8 +3,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { SignupComponent } from './signup.component';
-import { AuthService } from '../../../core/services/auth.service';
-import { UserCredential } from '@angular/fire/auth';
+import { AuthService } from '../auth.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 let authServiceMock: jasmine.SpyObj<AuthService>;
 let routerMock: jasmine.SpyObj<Router>;
@@ -17,7 +18,7 @@ describe('SignupComponent', () => {
     beforeEach(async () => {
         // Create spy objects for the services
         authServiceMock = jasmine.createSpyObj<AuthService>('AuthService', ['signUp']);
-        routerMock = jasmine.createSpyObj<Router>('Router', ['navigate']);
+        routerMock = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
 
         await TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, SignupComponent],
@@ -65,11 +66,9 @@ describe('SignupComponent', () => {
 
 
     it('should call authService.signup and navigate to login on success', fakeAsync(() => {
-        const mockUserCredential: Partial<UserCredential> = {
-            user: { uid: '123ABC' } as any
-        };
+        
 
-        authServiceMock.signUp.and.returnValue(of(mockUserCredential as UserCredential));
+        authServiceMock.signUp.and.returnValue(of({}));
 
         component.signupForm.setValue({
             name: 'John Doe',
@@ -82,13 +81,13 @@ describe('SignupComponent', () => {
         component.onSubmit();
 
         expect(authServiceMock.signUp).toHaveBeenCalledWith('John Doe', 'test@example.com', '123456');
-        expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+        expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/login', { replaceUrl: true });
     }));
 
     it('should navigate to login page', () => {
         const loginButton = html.querySelector('.login-btn') as HTMLButtonElement;
         loginButton.click();
-        expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+        expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/login', { replaceUrl: true });
     });
 
     it('should display "Name is required." when name is empty and touched', () => {

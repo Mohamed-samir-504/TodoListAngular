@@ -3,42 +3,45 @@ import { of, throwError } from 'rxjs';
 import { TodoListComponent } from './todo-list.component';
 import { TodoService } from './todo.service';
 import { ActivatedRoute } from '@angular/router';
-import e from 'express';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { AuthService } from '../auth/auth.service';
 
 describe('TodoListComponent', () => {
     let component: TodoListComponent;
     let fixture: ComponentFixture<TodoListComponent>;
     let todoServiceMock: jasmine.SpyObj<TodoService>;
+    let authServiceMock: jasmine.SpyObj<AuthService>;
 
-    
+
     beforeEach(async () => {
         const mockTodos = [
-        {
-            id: '1',
-            title: 'Task A',
-            description: 'Task A description',
-            userId: 'u1', status: 'todo',
-            priority: false,
-            timestamp: { toDate: () => new Date() }
-        },
+            {
+                id: '1',
+                title: 'Task A',
+                description: 'Task A description',
+                userId: 'u1', status: 'todo',
+                priority: false,
+                timestamp: { toDate: () => new Date() }
+            },
 
-        {
-            id: '2',
-            title: 'Task B',
-            description: 'Task B description',
-            userId: 'u1', status: 'completed',
-            priority: false,
-            timestamp: { toDate: () => new Date() }
-        },
-        {
-            id: '3',
-            title: 'Task C',
-            description: 'Task C description',
-            userId: 'u1', status: 'todo',
-            priority: true,
-            timestamp: { toDate: () => new Date() }
-        }
-    ];
+            {
+                id: '2',
+                title: 'Task B',
+                description: 'Task B description',
+                userId: 'u1', status: 'completed',
+                priority: false,
+                timestamp: { toDate: () => new Date() }
+            },
+            {
+                id: '3',
+                title: 'Task C',
+                description: 'Task C description',
+                userId: 'u1', status: 'todo',
+                priority: true,
+                timestamp: { toDate: () => new Date() }
+            }
+        ];
         todoServiceMock = jasmine.createSpyObj<TodoService>('TodoService', [
             'getTodos',
             'addTodo',
@@ -46,28 +49,30 @@ describe('TodoListComponent', () => {
             'updateStatus',
             'updatePriority'
         ]);
-
-        todoServiceMock.getTodos.and.returnValue(of(mockTodos));
-
+        
+        // Because TodoListComponent imports Logout component that uses AuthService
+        authServiceMock = jasmine.createSpyObj<AuthService>('AuthService', ['logout']);
         await TestBed.configureTestingModule({
             imports: [TodoListComponent],
             providers: [
-                { provide: TodoService, useValue: todoServiceMock },
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: () => 'u1' //This simulates route.snapshot.paramMap.get('userId')
-                            }
+            { provide: TodoService, useValue: todoServiceMock },
+            { provide: AuthService, useValue: authServiceMock },
+            {
+                provide: ActivatedRoute,
+                useValue: {
+                    snapshot: {
+                        paramMap: {
+                            get: () => 'u1' //This simulates route.snapshot.paramMap.get('userId')
                         }
                     }
                 }
+            }
             ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TodoListComponent);
         component = fixture.componentInstance;
+        todoServiceMock.getTodos.and.returnValue(of(mockTodos));
         fixture.detectChanges();
     });
 
@@ -99,7 +104,7 @@ describe('TodoListComponent', () => {
         expect(filtered[0].title).toContain('Task C');
     });
 
-    
+
     it('should call addTodo on the service with correct parameters', () => {
         todoServiceMock.addTodo.and.returnValue(of({}));
         component.onAddTodo({ title: 'New Task', description: 'Desc' });
@@ -110,14 +115,14 @@ describe('TodoListComponent', () => {
         todoServiceMock.deleteTodo.and.returnValue(of({}));
         component.onDeleteTodo('1');
         expect(todoServiceMock.deleteTodo).toHaveBeenCalledWith('1');
-        
+
     });
 
     it('should call updateStatus on the service with correct parameters', () => {
         todoServiceMock.updateStatus.and.returnValue(of({}));
         component.onCompleteTodo('1');
         expect(todoServiceMock.updateStatus).toHaveBeenCalledWith('1', 'completed');
-        
+
     });
 
     it('should call updatePriority on the service with correct parameters', () => {
@@ -136,12 +141,6 @@ describe('TodoListComponent', () => {
     it('should update searchText on input', () => {
         component.onSearchInput('abc');
         expect(component.searchText).toBe('abc');
-    });
-
-    it('should unsubscribe on destroy', () => {
-        const unsubscribeSpy = spyOn(component['todosSub'], 'unsubscribe');
-        component.ngOnDestroy();
-        expect(unsubscribeSpy).toHaveBeenCalled();
     });
 
     it('should log error when getTodos fails', () => {

@@ -3,8 +3,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { LoginComponent } from './login.component';
-import { AuthService } from '../../../core/services/auth.service';
-import { UserCredential } from '@angular/fire/auth';
+import { AuthService } from '../auth.service';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+
 
 let authServiceMock: jasmine.SpyObj<AuthService>;
 let routerMock: jasmine.SpyObj<Router>;
@@ -17,7 +18,7 @@ describe('LoginComponent', () => {
     beforeEach(async () => {
         // Create spy objects for the services
         authServiceMock = jasmine.createSpyObj<AuthService>('AuthService', ['login']);
-        routerMock = jasmine.createSpyObj<Router>('Router', ['navigate']);
+        routerMock = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
 
         await TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, LoginComponent],
@@ -50,17 +51,16 @@ describe('LoginComponent', () => {
     });
 
     it('should call authService.login and navigate on success', fakeAsync(() => {
-        const mockUserCredential: Partial<UserCredential> = {
-            user: { uid: '123ABC' } as any
-        };
-
-        authServiceMock.login.and.returnValue(of(mockUserCredential as UserCredential));
+        
+        const mockResponse ='123ABC';
+            
+        authServiceMock.login.and.returnValue(of(mockResponse));
 
         component.loginForm.setValue({ email: 'test@example.com', password: '123456' });
         component.onSubmit();
 
         expect(authServiceMock.login).toHaveBeenCalledWith('test@example.com', '123456');
-        expect(routerMock.navigate).toHaveBeenCalledWith(['/user', '123ABC', 'todos']);
+        expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/user/123ABC/todos', { replaceUrl: true });
     }));
 
     it('should show error on failed login', fakeAsync(() => {
@@ -77,7 +77,7 @@ describe('LoginComponent', () => {
     it('should navigate to signup page', () => {
         const signupButton = html.querySelector('.signup-btn') as HTMLButtonElement;
         signupButton.click();
-        expect(routerMock.navigate).toHaveBeenCalledWith(['/signup']);
+        expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/signup', { replaceUrl: true });
     });
 
     it('should display "Email is required." when email is empty and touched', () => {
@@ -109,7 +109,7 @@ describe('LoginComponent', () => {
         const errorMessage = html.querySelector('.error') as HTMLElement;
         expect(errorMessage.textContent).toContain('Password is required.');
     });
-    
+
     it('should display "Minimum 6 characters." when password is less tha 6 characters and touched', () => {
         const passwordControl = component.loginForm.get('password');
         passwordControl?.markAsTouched();
