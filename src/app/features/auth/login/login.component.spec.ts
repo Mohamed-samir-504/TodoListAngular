@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { LoginComponent } from './login.component';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 

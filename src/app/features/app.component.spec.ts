@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from '../core/services/auth.service';
 
 describe('AppComponent', () => {
   let authServiceMock: jasmine.SpyObj<AuthService>;

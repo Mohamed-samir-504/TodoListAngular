@@ -5,7 +5,7 @@ import { TodoService } from './todo.service';
 import { ActivatedRoute } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 
 describe('TodoListComponent', () => {
     let component: TodoListComponent;
