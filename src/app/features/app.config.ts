@@ -3,7 +3,8 @@ import { provideRouter, withComponentInputBinding, withRouterConfig } from '@ang
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { tokenInterceptor } from './auth/auth-interceptor';
+import { tokenInterceptor } from '../core/interceptors/auth-interceptor';
+
 
 
 const firebaseConfig = {

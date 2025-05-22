@@ -1,7 +1,8 @@
 import { HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { switchMap, take } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
+
  
 export function tokenInterceptor(
   request: HttpRequest<unknown>,
