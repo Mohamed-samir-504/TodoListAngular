@@ -7,14 +7,16 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'TodoListAngular';
-  private authService = inject(AuthService);
+  authService = inject(AuthService);
+
   ngOnInit() {
+    
     this.authService.autoLogin();
   }
 }

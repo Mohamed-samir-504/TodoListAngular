@@ -54,7 +54,7 @@ export class SignupComponent {
 
       this.authService.signUp(name!, email!, password!).subscribe({
         next: () => {
-          this.router.navigate(['/login']);
+          this.router.navigateByUrl('/login' , { replaceUrl: true });  
         },
         error: (err) => {
           console.error('Signup failed:', err.message);
@@ -64,6 +64,6 @@ export class SignupComponent {
   }
 
   goToLogin(): void {
-    this.router.navigate(['/login']);
+    this.router.navigateByUrl('/login' , { replaceUrl: true });  
   }
 }

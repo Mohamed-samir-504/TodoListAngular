@@ -14,6 +14,9 @@ export class AuthService {
   private databaseURL = environment.firestoreBaseUrl;
   private tokenExpirationTimer: any;
 
+  // To tell the app when the auth status (User authenticated or not) is ready
+  authReady = new BehaviorSubject<boolean>(false);
+
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
   
@@ -76,7 +79,7 @@ export class AuthService {
   logout() {
     this.userSubject.next(null);
     sessionStorage.removeItem('userData');
-    this.router.navigate(['/login']);
+    this.router.navigateByUrl('/login', { replaceUrl: true });
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
@@ -90,8 +93,11 @@ export class AuthService {
 
     const userDataString = sessionStorage.getItem('userData');
     if (!userDataString) {
+      // No user data found, so render login page
+      this.authReady.next(true);
       return;
     }
+
     const userData = JSON.parse(userDataString);
 
     const loadedUser = new User(
@@ -103,6 +109,7 @@ export class AuthService {
 
     if (loadedUser.token) {
       this.userSubject.next(loadedUser);
+      this.authReady.next(true);
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();

@@ -30,7 +30,7 @@ export class LoginComponent {
       console.log('Login submitted:', email, password);
       this.authService.login(email!, password!).subscribe({
         next: (userId) => {
-          this.router.navigate(['/user', userId, 'todos']);
+          this.router.navigateByUrl('/user/' + userId + '/todos', { replaceUrl: true });
         },
         error: (err) => {
           console.error('Login failed:', err.message);
@@ -40,6 +40,6 @@ export class LoginComponent {
     }
   }
   goToSignup(): void {
-    this.router.navigate(['/signup']);
+    this.router.navigateByUrl('/signup' , { replaceUrl: true });  
   }
 }

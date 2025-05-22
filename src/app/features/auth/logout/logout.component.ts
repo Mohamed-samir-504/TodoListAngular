@@ -16,5 +16,6 @@ export class LogoutComponent {
 
   onLogout(){
     this.authService.logout();
+    
   }
 }
