@@ -4,12 +4,13 @@ import { AddFormComponent } from "./add-form/add-form.component";
 import { SearchFormComponent } from "./search-form/search-form.component";
 import { TodoItemComponent } from "./todo-item/todo-item.component";
 import { TodoService } from './todo.service';
-import { Subscription, switchMap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { LogoutComponent } from '../auth/logout/logout.component';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [TabsComponent, AddFormComponent, SearchFormComponent, TodoItemComponent],
+  imports: [TabsComponent, AddFormComponent, SearchFormComponent, TodoItemComponent,LogoutComponent],
   templateUrl: './todo-list.component.html',
   styleUrl: './todo-list.component.css'
 })
