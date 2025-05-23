@@ -1,129 +1,10 @@
-// import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
-// import { AuthService } from './auth.service';
-// import { provideHttpClient, withInterceptors } from '@angular/common/http';
-// import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-// import { Router } from '@angular/router';
-// import { environment } from '../../../environments/environment';
-// import { take } from 'rxjs/operators';
-// import { tokenInterceptor } from '../interceptors/auth-interceptor';
-
-// describe('AuthService', () => {
-//     let service: AuthService;
-//     let testingController: HttpTestingController;
-//     let routerMock: jasmine.SpyObj<Router>;
-//     let fixture: ComponentFixture<AuthService>;
-
-//     beforeEach(() => {
-//         routerMock = jasmine.createSpyObj('Router', ['navigateByUrl']);
-
-//         TestBed.configureTestingModule({
-//             providers: [AuthService,
-//                 provideHttpClientTesting(), provideHttpClient(withInterceptors([tokenInterceptor])),
-//                 { provide: Router, useValue: routerMock }
-//             ],
-//         });
-//         service = TestBed.inject(AuthService);
-//         testingController = TestBed.inject(HttpTestingController);
-//         sessionStorage.clear();
-//     });
-
-//     it('should be created', () => {
-//         expect(service).toBeTruthy();
-//     });
-
-//     // it('should make a POST request on login', () => {
-//     //     const mockResponse = "123ABC";
-
-//     //     service.login('test@example.com', '123456').subscribe(userId => {
-//     //         expect(userId).toBe('123ABC');
-//     //     });
-
-
-//     //     const req = testingController.expectOne(req =>
-//     //         req.url.includes('signInWithPassword')
-//     //     );
-//     //     expect(req.request.method).toBe('POST');
-
-
-//     //     // req.flush(mockResponse);
-//     // });
-//     // const mockResponse = {
-//     //         displayName: "",
-//     //         email:"m@example.com",
-//     //         expiresIn:"3600",
-//     //         idToken:"fake_token",
-//     //         kind:"identitytoolkit#VerifyPasswordResponse",
-//     //         localId:"d3O6ilvQkuPRlGM3txKFNf65oi23",
-//     //         refreshToken:"fake_refresh",
-//     //         registered:true
-//     //     };
-
-
-
-//     afterEach(() => {
-//         testingController.verify();
-//     });
-
-//     it('should send login request and update auth state', (done) =>{
-//         const mockResponse = {
-//       kind: "identitytoolkit#VerifyPasswordResponse",
-//       localId: "abc123",
-//       email: "m@example.com",
-//       displayName: "",
-//       idToken: "ey...mock",
-//       expiresIn: "3600",
-//       refreshToken: "some-token",
-//       registered: true
-//     };
-
-//         const email = 'test@example.com';
-//         const password = 'password123';
-
-//         //spyOn(service['userSubject'], 'next').and.callThrough();
-//         spyOn(service, 'autoLogout');
-//         spyOn(sessionStorage, 'setItem');
-
-
-//         service.login(email, password).subscribe({
-//       next: (id) => {
-//         expect(id).toBe('abc123');
-//         done();
-
-//       },
-//       error: err => {
-//         console.error('Unexpected error in test:', err);
-//         fail(err.message);
-//         done();
-
-//       }
-//     });
-
-
-
-//         // const allRequests = testingController.match(() => true);
-//         // console.log('Requests made:', allRequests.map(r => r.request.urlWithParams));
-
-//         const expectedUrl = `${environment.authBaseUrl}:signInWithPassword?key=${environment.firebaseApiKey}`;
-//         const req = testingController.expectOne(expectedUrl);
-//         expect(req.request.method).toBe('POST');
-//         expect(req.request.body).toEqual({
-//             email,
-//             password,
-//             returnSecureToken: true
-//         });
-
-//         req.flush(mockResponse);
-//     });
-
-// });
-
-import { fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { tokenInterceptor } from '../interceptors/auth-interceptor';
+import { User } from '../../features/auth/user.model';
 
 describe('AuthService with interceptor', () => {
     let service: AuthService;
@@ -135,7 +16,7 @@ describe('AuthService with interceptor', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                provideHttpClient(withInterceptors([tokenInterceptor])),
+                provideHttpClient(),
                 provideHttpClientTesting(),
                 AuthService,
                 { provide: Router, useValue: routerMock }
@@ -165,7 +46,6 @@ describe('AuthService with interceptor', () => {
         spyOn(service, 'autoLogout');
         spyOn(sessionStorage, 'setItem');
 
-
         service.login(email, password).subscribe(userId => {
             expect(userId).toBe('abc123');
             expect(service['userSubject'].next).toHaveBeenCalled();
@@ -184,8 +64,6 @@ describe('AuthService with interceptor', () => {
 
         // The observable of POST method resolves so switchmap is called
         req.flush(mockResponse);
-
-
     }));
 
     it('should sign up a user and create Firestore doc', fakeAsync(() => {
@@ -207,7 +85,7 @@ describe('AuthService with interceptor', () => {
         const expectedUrl = `${environment.authBaseUrl}:signUp?key=${environment.firebaseApiKey}`;
         const postReq = httpMock.expectOne(expectedUrl);
         expect(postReq.request.method).toBe('POST');
-         expect(postReq.request.body).toEqual({
+        expect(postReq.request.body).toEqual({
             email,
             password,
             returnSecureToken: true
@@ -219,14 +97,73 @@ describe('AuthService with interceptor', () => {
         const patchReq = httpMock.expectOne(userDocUrl);
         expect(patchReq.request.method).toBe('PATCH');
 
-        
         const body = patchReq.request.body;
         expect(body.fields.uid.stringValue).toBe(mockResponse.localId);
         expect(body.fields.name.stringValue).toBe(name);
         expect(body.fields.email.stringValue).toBe(email);
 
         patchReq.flush({});
+    }));
+
+    it('should logout and reset timer and session storage', () => {
+
+        spyOn(service['userSubject'], 'next')
+        spyOn(sessionStorage, 'removeItem');
+
+        service.logout();
+        expect(service['userSubject'].next).toHaveBeenCalledWith(null);
+        expect(sessionStorage.removeItem).toHaveBeenCalled();
+        expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/login', { replaceUrl: true });
+        expect(service['tokenExpirationTimer']).toBe(null);
+
+    });
+
+    it('should call autoLogin and do nothing if sessionStorage has no userData', () => {
+        spyOn(service['authReady'], 'next');
+        spyOn(service['userSubject'], 'next');
+        service.autoLogin();
+        expect(service['authReady'].next).toHaveBeenCalledWith(true);
+        expect(service['userSubject'].next).not.toHaveBeenCalled();
+
+    });
+
+    it('should call autoLogin and restore user and call autoLogout if userData exists', fakeAsync(() => {
+        const expirationDate = new Date(Date.now() + 3600 * 1000);
+        const mockUser = new User(
+            'test@example.com',
+            'userId123',
+            'token123',
+            expirationDate
+        );
+
+        sessionStorage.setItem('userData', JSON.stringify(mockUser));
+
+        spyOn(service['userSubject'], 'next');
+        spyOn(service['authReady'], 'next');
+        spyOn(service, 'autoLogout');
+
+        service.autoLogin();
+
+        expect(service['userSubject'].next).toHaveBeenCalled();
+        expect(service['authReady'].next).toHaveBeenCalledWith(true);
+        expect(service.autoLogout).toHaveBeenCalled();
 
 
     }));
+
+    it('should call logout after expirationDuration', fakeAsync(() => {
+    const logoutSpy = spyOn(service, 'logout');
+
+    const expiration = 5000; // 5 seconds
+    service.autoLogout(expiration);
+
+    // logout should NOT have been called yet
+    expect(logoutSpy).not.toHaveBeenCalled();
+
+    // Advance virtual time by 5 seconds
+    tick(expiration);
+
+    expect(logoutSpy).toHaveBeenCalled();
+  }));
+
 });
