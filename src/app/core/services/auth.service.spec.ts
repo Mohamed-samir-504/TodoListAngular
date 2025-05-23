@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
@@ -32,7 +32,7 @@ describe('AuthService with interceptor', () => {
         httpMock.verify();
     });
 
-    it('should login a user and return user local id', fakeAsync(() => {
+    it('should login a user and return user local id', () => {
 
         const email = 'test@example.com';
         const password = '123456';
@@ -64,9 +64,9 @@ describe('AuthService with interceptor', () => {
 
         // The observable of POST method resolves so switchmap is called
         req.flush(mockResponse);
-    }));
+    });
 
-    it('should sign up a user and create Firestore doc', fakeAsync(() => {
+    it('should sign up a user and create Firestore doc', () => {
 
         const name = 'Test User';
         const email = 'test@example.com';
@@ -103,7 +103,7 @@ describe('AuthService with interceptor', () => {
         expect(body.fields.email.stringValue).toBe(email);
 
         patchReq.flush({});
-    }));
+    });
 
     it('should logout and reset timer and session storage', () => {
 
@@ -127,7 +127,7 @@ describe('AuthService with interceptor', () => {
 
     });
 
-    it('should call autoLogin and restore user and call autoLogout if userData exists', fakeAsync(() => {
+    it('should call autoLogin and restore user and call autoLogout if userData exists', () => {
         const expirationDate = new Date(Date.now() + 3600 * 1000);
         const mockUser = new User(
             'test@example.com',
@@ -149,7 +149,7 @@ describe('AuthService with interceptor', () => {
         expect(service.autoLogout).toHaveBeenCalled();
 
 
-    }));
+    });
 
     it('should call logout after expirationDuration', fakeAsync(() => {
     const logoutSpy = spyOn(service, 'logout');

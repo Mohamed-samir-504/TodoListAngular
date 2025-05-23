@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -63,7 +63,7 @@ describe('SignupComponent', () => {
     });
 
 
-    it('should call authService.signup and navigate to login on success', fakeAsync(() => {
+    it('should call authService.signup and navigate to login on success', () => {
         
 
         authServiceMock.signUp.and.returnValue(of({}));
@@ -80,7 +80,7 @@ describe('SignupComponent', () => {
 
         expect(authServiceMock.signUp).toHaveBeenCalledWith('John Doe', 'test@example.com', '123456');
         expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/login', { replaceUrl: true });
-    }));
+    });
 
     it('should navigate to login page', () => {
         const loginButton = html.querySelector('.login-btn') as HTMLButtonElement;

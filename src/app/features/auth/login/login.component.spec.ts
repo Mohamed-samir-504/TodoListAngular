@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
@@ -50,7 +50,7 @@ describe('LoginComponent', () => {
         expect(component.loginForm.valid).toBeTrue();
     });
 
-    it('should call authService.login and navigate on success', fakeAsync(() => {
+    it('should call authService.login and navigate on success', () => {
         
         const mockResponse ='123ABC';
             
@@ -61,9 +61,9 @@ describe('LoginComponent', () => {
 
         expect(authServiceMock.login).toHaveBeenCalledWith('test@example.com', '123456');
         expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/user/123ABC/todos', { replaceUrl: true });
-    }));
+    });
 
-    it('should show error on failed login', fakeAsync(() => {
+    it('should show error on failed login', () => {
         spyOn(window, 'alert');
         authServiceMock.login.and.returnValue(throwError(() => ({ message: 'Invalid credentials' })));
 
@@ -72,7 +72,7 @@ describe('LoginComponent', () => {
 
         expect(authServiceMock.login).toHaveBeenCalled();
         expect(window.alert).toHaveBeenCalledWith('Login failed. Please check your credentials.');
-    }));
+    });
 
     it('should navigate to signup page', () => {
         const signupButton = html.querySelector('.signup-btn') as HTMLButtonElement;
