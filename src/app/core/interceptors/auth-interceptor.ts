@@ -22,7 +22,6 @@ export function tokenInterceptor(
         return next(requestWithToken);
       }
  
-      console.log('tokenInterceptor invoked');
       return next(request);
     })
   );

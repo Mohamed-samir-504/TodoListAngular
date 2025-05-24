@@ -13,7 +13,7 @@ export class TodoService {
   constructor(private http: HttpClient) { }
 
   getTodos(userId: string): Observable<any> {
-    const url = `https://firestore.googleapis.com/v1/projects/${this.projectId}/databases/(default)/documents:runQuery?key=${this.apiKey}`;
+    const url = `${this.databaseURL}/${this.projectId}/databases/(default)/documents:runQuery?key=${this.apiKey}`;
     const body = {
       structuredQuery: {
         from: [{ collectionId: 'todo-items' }],

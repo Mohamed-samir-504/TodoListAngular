@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { User } from '../../features/auth/user.model';
 
-describe('AuthService with interceptor', () => {
+describe('AuthService', () => {
     let service: AuthService;
     let httpMock: HttpTestingController;
     let routerMock: jasmine.SpyObj<Router>;
@@ -160,7 +160,7 @@ describe('AuthService with interceptor', () => {
     // logout should NOT have been called yet
     expect(logoutSpy).not.toHaveBeenCalled();
 
-    // Advance virtual time by 5 seconds
+    // Advance virtual time by 5 seconds (hence use fakeAsync)
     tick(expiration);
 
     expect(logoutSpy).toHaveBeenCalled();
