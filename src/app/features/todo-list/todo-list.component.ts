@@ -90,8 +90,20 @@ export class TodoListComponent {
     });
   }
 
-  onCompleteTodo(todoId: string) {
+  onMarkAsCompleted(todoId: string) {
     this.todoService.updateStatus(todoId, "completed").pipe(
+      switchMap(() => this.todoService.getTodos(this.userId))
+    ).subscribe({
+      next: (todos) => {
+        this.todos = todos;
+      },
+      error: (err) => {
+        console.error('Error:', err);
+      }
+    });
+  }
+  onMarkAsTodo(todoId: string){
+    this.todoService.updateStatus(todoId, "todo").pipe(
       switchMap(() => this.todoService.getTodos(this.userId))
     ).subscribe({
       next: (todos) => {
@@ -119,6 +131,5 @@ export class TodoListComponent {
       });
     }
   }
-
 
 }

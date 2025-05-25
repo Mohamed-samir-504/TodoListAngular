@@ -14,9 +14,10 @@
 @for(todo of filteredTodos; track todo.id){
         <app-todo-item 
             [todo]="todo"
-            (complete)="onCompleteTodo($event)" 
+            (markAsCompleted)="onMarkAsCompleted($event)" 
             (delete)="onDeleteTodo($event)"
-            (togglePriority)="onTogglePriority($event)">
+            (togglePriority)="onTogglePriority($event)"
+            (markAsTodo)="onMarkAsTodo($event)">
         </app-todo-item>
 
 }

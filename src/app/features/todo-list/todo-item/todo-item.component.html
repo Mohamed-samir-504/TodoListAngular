@@ -9,13 +9,14 @@
     </div>
     <div class="icons">
         @if(todo.status === 'todo'){
-            <i class="fa-solid fa-check" (click)="onComplete()"></i>
+            <i class="fa-solid fa-check" (click)="onMarkAsCompleted()"></i>
             <i class="fa-solid fa-trash" (click)="onDelete()"></i>
             <i class="fa-solid fa-circle-up priority-icon" [class.active]="todo.priority"
                 (click)="onTogglePriority()" title="Mark as priority"></i>
         }
 
         @else {
+            <i class="fa-solid fa-arrow-left" (click)="onMarkAsTodo()"></i>
             <i class="fa-solid fa-trash" (click)="onDelete()"></i>
         }
     </div>
