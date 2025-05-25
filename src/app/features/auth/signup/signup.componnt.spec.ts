@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { SignupComponent } from './signup.component';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -64,8 +64,6 @@ describe('SignupComponent', () => {
 
 
     it('should call authService.signup and navigate to login on success', () => {
-        
-
         authServiceMock.signUp.and.returnValue(of({}));
 
         component.signupForm.setValue({
@@ -80,6 +78,23 @@ describe('SignupComponent', () => {
 
         expect(authServiceMock.signUp).toHaveBeenCalledWith('John Doe', 'test@example.com', '123456');
         expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/login', { replaceUrl: true });
+    });
+
+    it('should handle error from authService.signUp', () => {
+        const error = new Error('Something went wrong');
+
+        authServiceMock.signUp.and.returnValue(throwError(() => error));
+        spyOn(console, 'error');
+
+        component.signupForm.setValue({ name: 'test', email: 'fail@example.com', 
+            passwords: {
+                password: 'wrongpass',
+                confirmPassword: 'wrongpass'
+            }});
+        component.onSubmit();
+
+        expect(authServiceMock.signUp).toHaveBeenCalled();
+        expect(console.error).toHaveBeenCalledWith('Signup failed:', error.message);
     });
 
     it('should navigate to login page', () => {

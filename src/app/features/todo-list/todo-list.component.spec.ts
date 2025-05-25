@@ -38,7 +38,7 @@ describe('TodoListComponent', () => {
             timestamp: { toDate: () => new Date() }
         }
     ];
-    
+
 
     beforeEach(async () => {
         todoServiceMock = jasmine.createSpyObj<TodoService>('TodoService', [
@@ -142,6 +142,7 @@ describe('TodoListComponent', () => {
         expect(component.searchText).toBe('abc');
     });
 
+    //Errors
     it('should log error when getTodos fails', () => {
         const error = { message: 'Failed' };
         todoServiceMock.getTodos.and.returnValue(throwError(() => error));
@@ -152,6 +153,49 @@ describe('TodoListComponent', () => {
 
         expect(console.error).toHaveBeenCalledWith('Error fetching todos:', error);
     });
+    it('should log error when addTodo fails', () => {
+        const error = { message: 'Failed' };
+        todoServiceMock.addTodo.and.returnValue(throwError(() => error));
+        spyOn(console, 'error');
+
+        component.onAddTodo({ title: 'Test', description: 'Test desc' });
+
+        expect(console.error).toHaveBeenCalledWith('Error:', error);
+    });
+
+    it('should log error when deleteTodo fails', () => {
+        const error = { message: 'Failed' };
+        todoServiceMock.deleteTodo.and.returnValue(throwError(() => error));
+        spyOn(console, 'error');
+
+        component.onDeleteTodo("user123");
+
+        expect(console.error).toHaveBeenCalledWith('Error:', error);
+    });
+
+    it('should handle error if updateStatus fails in onCompleteTodo', () => {
+        const error = new Error('Update status failed');
+
+        todoServiceMock.updateStatus.and.returnValue(throwError(() => error));
+        spyOn(console, 'error');
+
+        component.onCompleteTodo('1');
+        expect(console.error).toHaveBeenCalledWith('Error:', error);
+    });
+
+    it('should handle error if updatePriority fails in onTogglePriority', () => {
+        component.todos = [
+            { id: '1', priority: false }
+        ] as any[];
+
+        const error = new Error('Update priority failed');
+        todoServiceMock.updatePriority.and.returnValue(throwError(() => error));
+        spyOn(console, 'error');
+
+        component.onTogglePriority('1');
+        expect(console.error).toHaveBeenCalledWith('Error:', error);
+    });
+
 
     it('should return todos filtered by status, searched by title, and sorted by priority and timestamp', () => {
         const baseDate = new Date('2024-01-01T10:00:00Z');
@@ -188,7 +232,7 @@ describe('TodoListComponent', () => {
 
         expect(result.length).toBe(3);
         expect(result[0].title).toBe('Test B'); // higher priority and newer
-        expect(result[1].title).toBe('Test A'); 
+        expect(result[1].title).toBe('Test A');
         expect(result[2].title).toBe('Test D');
     });
 

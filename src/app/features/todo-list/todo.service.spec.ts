@@ -159,6 +159,21 @@ describe('TodoService', () => {
         expect(req.request.method).toBe('PATCH');
         expect(req.request.body.fields.priority.booleanValue).toBe(priority);
 
-        req.flush({}); 
+        req.flush({});
+    });
+
+    it('should return empty array if response is an empty array', () => {
+        const result = service['responseToArray']([]);
+        expect(result).toEqual([]);
+    });
+
+    it('should return empty array if response has no documents', () => {
+        const response = [
+            { readTime: '2024-05-22T12:00:00Z' },
+            { somethingElse: true }
+        ];
+
+        const result = service['responseToArray'](response);
+        expect(result).toEqual([]);
     });
 })
