@@ -38,6 +38,7 @@ describe('TodoListComponent', () => {
             timestamp: { toDate: () => new Date() }
         }
     ];
+    
 
     beforeEach(async () => {
         todoServiceMock = jasmine.createSpyObj<TodoService>('TodoService', [
@@ -151,4 +152,44 @@ describe('TodoListComponent', () => {
 
         expect(console.error).toHaveBeenCalledWith('Error fetching todos:', error);
     });
+
+    it('should return todos filtered by status, searched by title, and sorted by priority and timestamp', () => {
+        const baseDate = new Date('2024-01-01T10:00:00Z');
+
+        component.activeTab = 'todo';
+        component.todos = [
+            {
+                title: 'Test A',
+                status: 'todo',
+                priority: true,
+                timestamp: new Date(baseDate.getTime() + 1000),
+            },
+            {
+                title: 'Test B',
+                status: 'todo',
+                priority: true,
+                timestamp: new Date(baseDate.getTime() + 2000),
+            },
+            {
+                title: 'Test C',
+                status: 'completed',
+                priority: true,
+                timestamp: new Date(baseDate.getTime() + 3000),
+            },
+            {
+                title: 'Test D',
+                status: 'todo',
+                priority: false,
+                timestamp: new Date(baseDate.getTime() + 4000),
+            }
+        ];
+
+        const result = component.filteredTodos;
+
+        expect(result.length).toBe(3);
+        expect(result[0].title).toBe('Test B'); // higher priority and newer
+        expect(result[1].title).toBe('Test A'); 
+        expect(result[2].title).toBe('Test D');
+    });
+
 });

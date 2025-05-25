@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
 import { AuthService } from '../core/services/auth.service';
 
 describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let component: AppComponent;
   let authServiceMock: jasmine.SpyObj<AuthService>;
   
   beforeEach(async () => {
@@ -13,6 +13,9 @@ describe('AppComponent', () => {
       imports: [AppComponent],
       providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
   });
 
   it('should create the app', () => {
@@ -25,6 +28,11 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('TodoListAngular');
+  });
+
+  it('should call authService.autoLogin on ngOnInit', () => {
+    component.ngOnInit();
+    expect(authServiceMock.autoLogin).toHaveBeenCalled();
   });
 
 });

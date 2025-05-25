@@ -152,18 +152,40 @@ describe('AuthService', () => {
     });
 
     it('should call logout after expirationDuration', fakeAsync(() => {
-    const logoutSpy = spyOn(service, 'logout');
+        const logoutSpy = spyOn(service, 'logout');
 
-    const expiration = 5000; // 5 seconds
-    service.autoLogout(expiration);
+        const expiration = 5000; // 5 seconds
+        service.autoLogout(expiration);
 
-    // logout should NOT have been called yet
-    expect(logoutSpy).not.toHaveBeenCalled();
+        // logout should NOT have been called yet
+        expect(logoutSpy).not.toHaveBeenCalled();
 
-    // Advance virtual time by 5 seconds (hence use fakeAsync)
-    tick(expiration);
+        // Advance virtual time by 5 seconds (hence use fakeAsync)
+        tick(expiration);
 
-    expect(logoutSpy).toHaveBeenCalled();
-  }));
+        expect(logoutSpy).toHaveBeenCalled();
+    }));
+
+    // User model tests
+
+    it('should return null if tokenExpirationDate is in the past', () => {
+        const expiredDate = new Date(Date.now() - 10000); // 10 seconds ago
+        const user = new User('test@example.com', 'abc123', 'some-token', expiredDate);
+
+        expect(user.token).toBeNull();
+    });
+
+    it('should return null if tokenExpirationDate is missing', () => {
+        const user = new User('test@example.com', 'abc123', 'some-token', null as any);
+
+        expect(user.token).toBeNull();
+    });
+
+    it('should return token if tokenExpirationDate is in the future', () => {
+        const futureDate = new Date(Date.now() + 10000); // 10 seconds from now
+        const user = new User('test@example.com', 'abc123', 'some-token', futureDate);
+
+        expect(user.token).toBe('some-token');
+    });
 
 });
