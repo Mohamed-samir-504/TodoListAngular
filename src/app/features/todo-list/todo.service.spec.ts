@@ -1,10 +1,9 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { TodoService } from './todo.service';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { User } from '../../features/auth/user.model';
 
 describe('TodoService', () => {
     let service: TodoService;
@@ -44,7 +43,7 @@ describe('TodoService', () => {
                         description: { stringValue: 'Test Description' },
                         status: { stringValue: 'pending' },
                         priority: { booleanValue: true },
-                        userId: { stringValue: 'user123' },
+                        userId: { stringValue: userId },
                         timestamp: { timestampValue: '2024-01-01T12:00:00.000Z' }
                     }
                 }
