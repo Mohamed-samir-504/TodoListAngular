@@ -1,0 +1,117 @@
+.sign-up-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main card */
+/* .sign-up-card {
+
+    background-color: #e8e0f1;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+
+} */
+
+/* Title */
+.form-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 24px;
+}
+
+
+/* Step content box */
+.step-content {
+    /* background-color: #eef2ef; */
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+
+/* Buttons */
+button[mat-button] {
+    background-color: #b57edc;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 10px 24px;
+    margin-top: 12px;
+    margin-right: 10px;
+}
+
+button[mat-button]:disabled {
+    background-color: #ccc;
+    color: white;
+}
+
+/* Login link */
+.login-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-btn {
+    background-color: #8c62b1;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+::ng-deep .mat-stepper-horizontal {
+    background-color: #e0dee4 !important;
+    padding: 2rem 2rem !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    margin: 2rem auto !important;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1) !important;
+    font-family: Arial, sans-serif !important;
+    box-sizing: border-box !important;
+    /* or your desired color */
+}
+
+::ng-deep .mat-stepper-horizontal-header {
+    background-color: #DADADA !important;
+}
+::ng-deep .mat-step-icon {
+    background-color: #8c62b1;
+    /* Step circle */
+    color: white;
+}
+
+::ng-deep .mat-step-icon-selected {
+    background-color: #6a1b9a;
+    color: white;
+}
+
+::ng-deep .mat-step-label {
+  color: black !important;
+}
+
+
+::ng-deep .mat-form-field-invalid .mat-form-field-underline {
+  background-color: #b71c1c !important;
+  height: 3px !important;  
+}
+
+::ng-deep .mat-form-field-subscript-wrapper .mat-error {
+  color: #b71c1c !important;
+  height: 3px !important;  
+}
+
+::ng-deep button[mat-button][_ngcontent-ng-c2927597401] {
+    background-color: #8c62b1;
+    color: white;
+}
