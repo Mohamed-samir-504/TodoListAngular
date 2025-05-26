@@ -115,3 +115,8 @@ button[mat-button]:disabled {
     background-color: #8c62b1;
     color: white;
 }
+
+::ng-deep .mat-step-icon-selected {
+    background-color: #8c62b1 !important;
+    color: white !important;
+}
