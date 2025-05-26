@@ -1,0 +1,25 @@
+<mat-horizontal-stepper [linear]="true">
+  <mat-step [stepControl]="getStep(0)">
+    <app-personal-info [formGroup]="getStep(0)"></app-personal-info>
+    <div>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+
+  <mat-step [stepControl]="getStep(1)">
+    <app-contact-info [formGroup]="getStep(1)"></app-contact-info>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+
+  <mat-step [stepControl]="getStep(2)">
+    <app-credentials [formGroup]="getStep(2)"></app-credentials>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button color="primary" (click)="onSubmit()">Submit</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
+

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { authGuard } from '../core/guards/auth.guard';
+import { SignupFormComponent } from './auth/multistep-signup/signup-form/signup-form.component';
 
 export const routes: Routes = [
     {
@@ -15,7 +16,7 @@ export const routes: Routes = [
     },
     {
         path: 'signup',
-        component: SignupComponent
+        component: SignupFormComponent
     },
     {
         path: 'user/:userId/todos',
