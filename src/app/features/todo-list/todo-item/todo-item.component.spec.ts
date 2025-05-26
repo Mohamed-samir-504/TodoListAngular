@@ -39,12 +39,12 @@ describe('TodoItemComponent', () => {
         expect(component.delete.emit).toHaveBeenCalledWith('1');
     });
 
-    it('should emit complete event with todo id when onComplete is called', () => {
-        spyOn(component.complete, 'emit');
+    it('should emit complete event with todo id when onMarkAsCompleted is called', () => {
+        spyOn(component.markAsCompleted, 'emit');
 
-        component.onComplete();
+        component.onMarkAsCompleted();
 
-        expect(component.complete.emit).toHaveBeenCalledWith('1');
+        expect(component.markAsCompleted.emit).toHaveBeenCalledWith('1');
     });
 
     it('should emit togglePriority event with todo id when onTogglePriority is called', () => {
@@ -56,10 +56,10 @@ describe('TodoItemComponent', () => {
     });
 
     it('should emit complete when complete button is clicked', () => {
-        spyOn(component, 'onComplete');
+        spyOn(component, 'onMarkAsCompleted');
         const button = html.querySelector('.fa-check') as HTMLButtonElement;
         button.click();
-        expect(component.onComplete).toHaveBeenCalled();
+        expect(component.onMarkAsCompleted).toHaveBeenCalled();
     });
 
     it('should emit togglePriority when togglePriority button is clicked', () => {

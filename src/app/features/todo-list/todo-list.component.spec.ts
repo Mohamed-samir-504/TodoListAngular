@@ -119,7 +119,7 @@ describe('TodoListComponent', () => {
 
     it('should call updateStatus on the service with correct parameters', () => {
         todoServiceMock.updateStatus.and.returnValue(of({}));
-        component.onCompleteTodo('1');
+        component.onMarkAsCompleted('1');
         expect(todoServiceMock.updateStatus).toHaveBeenCalledWith('1', 'completed');
 
     });
@@ -173,13 +173,13 @@ describe('TodoListComponent', () => {
         expect(console.error).toHaveBeenCalledWith('Error:', error);
     });
 
-    it('should handle error if updateStatus fails in onCompleteTodo', () => {
+    it('should handle error if updateStatus fails in onMarkAsCompletedTodo', () => {
         const error = new Error('Update status failed');
 
         todoServiceMock.updateStatus.and.returnValue(throwError(() => error));
         spyOn(console, 'error');
 
-        component.onCompleteTodo('1');
+        component.onMarkAsCompleted('1');
         expect(console.error).toHaveBeenCalledWith('Error:', error);
     });
 
