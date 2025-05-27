@@ -97,3 +97,25 @@ button:not(:disabled):hover {
     background-color: #8c62b1 !important;
     color: white ;
 }
+
+@media (max-width: 480px) {
+  .form-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  ::ng-deep .mat-stepper-label-position-bottom .mat-step-label {
+    font-size: 12px;
+  }
+
+  ::ng-deep .mat-horizontal-content-container {
+    padding: 0 !important;
+  }
+
+  ::ng-deep .mat-step-header {
+    padding: 4px 6px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+}
