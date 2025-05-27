@@ -95,6 +95,10 @@ button:not(:disabled):hover {
 /* The icon (1,2,3) beside the label in the header */
 ::ng-deep .mat-step-icon-selected {
     background-color: #8c62b1 !important;
+}
+
+/* The color of the number inside the icon */
+::ng-deep .mat-step-icon-selected span {
     color: white ;
 }
 
