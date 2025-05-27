@@ -7,3 +7,8 @@ html, body {
   overflow-x: hidden; /* prevent sideways scroll */
 }
 
+.snackbar-success, .snackbar-error{
+  font-weight: bold;
+  text-align: center;
+  border-radius: 6px;
+}

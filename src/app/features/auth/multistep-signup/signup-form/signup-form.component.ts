@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { PersonalInfoComponent } from './personal-info/personal-info.component';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
 import { CredentialsComponent } from './credentials/credentials.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 function equalPasswords(control: AbstractControl) {
   const password = control.get('password')?.value;
@@ -29,13 +31,14 @@ function equalPasswords(control: AbstractControl) {
     CredentialsComponent],
   templateUrl: './signup-form.component.html',
   styleUrl: './signup-form.component.css',
-  
+
 })
 
 export class SignupFormComponent {
   formSteps: FormArray;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
+    private authService: AuthService, private router: Router) {
 
     this.formSteps = this.fb.array([
       new FormGroup({
@@ -87,9 +90,21 @@ export class SignupFormComponent {
     this.authService.signUp(name, email, password).subscribe({
       next: () => {
         this.router.navigateByUrl('/login', { replaceUrl: true });
+        this.snackBar.open('Signed up successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-success']
+        });
       },
       error: (err) => {
-        console.error('Signup failed:', err.message);
+        this.snackBar.open('Error signing up', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+        console.error('Signup error:', err.message);
       }
     });
   }

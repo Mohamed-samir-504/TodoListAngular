@@ -68,6 +68,7 @@ button:not(:disabled):hover {
     cursor: pointer;
 }
 
+/*The whole stepper component*/
 ::ng-deep .mat-stepper-horizontal {
     background-color: #e0dee4 !important;
     padding: 1rem 2rem !important;
@@ -81,34 +82,17 @@ button:not(:disabled):hover {
     
 }
 
+/* The header of the stepper (the part that contains the steps) */
 ::ng-deep .mat-stepper-horizontal-header {
     background-color: #DADADA !important;
 }
-::ng-deep .mat-step-icon {
-    background-color: #8c62b1;
-    color: white;
-}
 
-::ng-deep .mat-step-icon-selected {
-    background-color: #6a1b9a;
-    color: white;
-}
-
+/* The label (personal info, credentials, etc.) in the header of the stepper */
 ::ng-deep .mat-step-label {
   color: black !important;
 }
 
-
-::ng-deep .mat-form-field-invalid .mat-form-field-underline {
-  background-color: #b71c1c !important;
-  height: 3px !important;  
-}
-
-::ng-deep .mat-form-field-subscript-wrapper .mat-error {
-  color: #b71c1c !important;
-  height: 3px !important;  
-}
-
+/* The icon (1,2,3) beside the label in the header */
 ::ng-deep .mat-step-icon-selected {
     background-color: #8c62b1 !important;
     color: white ;
