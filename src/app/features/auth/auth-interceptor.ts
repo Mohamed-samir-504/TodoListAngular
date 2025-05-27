@@ -13,6 +13,7 @@ export function tokenInterceptor(
     take(1),
     switchMap((user) => {
       if (user) {
+        // Clone the request and set the new header in one step
         const requestWithToken = request.clone({
           setHeaders: {
             Authorization: `Bearer ${user.token}`,
