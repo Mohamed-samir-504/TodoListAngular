@@ -11,7 +11,7 @@
     align-items: center;
 }
 
-.sign-up-card h2{
+.sign-up-card h2 {
     margin: 0;
 }
 
@@ -24,29 +24,26 @@
 }
 
 
-
 .step-content {
     padding: 12px 0px;
     border-radius: 8px;
     margin-bottom: 16px;
 }
 
-
-
 button[mat-button] {
-    background-color: #8c62b1;
-    color: white;
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 10px 24px;
-    margin-top: 0;
-    margin-right: 13px;
+    background-color: #8c62b1 !important;
+    color: white !important;
+    border-radius: 6px !important;
+    padding: 10px 24px !important;
+    margin-top: 0 !important;
+    margin-right: 13px !important;
 }
 
 button[mat-button]:disabled {
-    background-color: #ccc;
-    color: white;
+    background-color: #ccc !important;
+    color: white !important;
 }
+
 button:not(:disabled):hover {
     transform: scale(1.05);
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
@@ -69,7 +66,7 @@ button:not(:disabled):hover {
 }
 
 /*The whole stepper component*/
-::ng-deep .mat-stepper-horizontal {
+.mat-stepper-horizontal {
     background-color: #e0dee4 !important;
     padding: 1rem 2rem !important;
     border-radius: 12px !important;
@@ -79,47 +76,52 @@ button:not(:disabled):hover {
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.1) !important;
     font-family: Arial, sans-serif !important;
     box-sizing: border-box !important;
-    
+
 }
 
 /* The header of the stepper (the part that contains the steps) */
-::ng-deep .mat-stepper-horizontal-header {
+.mat-stepper-horizontal-header {
     background-color: #DADADA !important;
 }
 
 /* The label (personal info, credentials, etc.) in the header of the stepper */
-::ng-deep .mat-step-label {
-  color: black !important;
+.mat-step-label {
+    color: black !important;
 }
 
 /* The icon (1,2,3) beside the label in the header */
-::ng-deep .mat-step-icon-selected {
+.mat-step-icon-selected {
     background-color: #8c62b1 !important;
 }
 
 /* The color of the number inside the icon */
-::ng-deep .mat-step-icon-selected span {
-    color: white ;
+.mat-step-icon-selected span {
+    color: white;
 }
 
+/* .mat-mdc-button:not(:disabled) {
+    color: white !important;
+} */
+
+
 @media (max-width: 480px) {
-  .form-title {
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
+    .form-title {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
 
-  ::ng-deep .mat-stepper-label-position-bottom .mat-step-label {
-    font-size: 12px;
-  }
+    .mat-stepper-label-position-bottom .mat-step-label {
+        font-size: 12px;
+    }
 
-  ::ng-deep .mat-horizontal-content-container {
-    padding: 0 !important;
-  }
+    .mat-horizontal-content-container {
+        padding: 0 !important;
+    }
 
-  ::ng-deep .mat-step-header {
-    padding: 4px 6px !important;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px;
-  }
+    .mat-step-header {
+        padding: 4px 6px !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
 }

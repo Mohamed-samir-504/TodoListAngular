@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
@@ -31,7 +31,7 @@ function equalPasswords(control: AbstractControl) {
     CredentialsComponent],
   templateUrl: './signup-form.component.html',
   styleUrl: './signup-form.component.css',
-
+  encapsulation: ViewEncapsulation.None
 })
 
 export class SignupFormComponent {
