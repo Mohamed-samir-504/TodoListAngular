@@ -15,7 +15,8 @@ export class AuthService {
   private tokenExpirationTimer: any;
 
   // To tell the app when the auth status (User authenticated or not) is ready
-  authReady = new BehaviorSubject<boolean>(false);
+  private authReadySubject = new BehaviorSubject<boolean>(false);
+  authReady = this.authReadySubject.asObservable();
 
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
@@ -94,7 +95,7 @@ export class AuthService {
     const userDataString = sessionStorage.getItem('userData');
     if (!userDataString) {
       // No user data found, so render login page
-      this.authReady.next(true);
+      this.authReadySubject.next(true);
       return;
     }
 
@@ -109,7 +110,7 @@ export class AuthService {
 
     if (loadedUser.token) {
       this.userSubject.next(loadedUser);
-      this.authReady.next(true);
+      this.authReadySubject.next(true);
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
