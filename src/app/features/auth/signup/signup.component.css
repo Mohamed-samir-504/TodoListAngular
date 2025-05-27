@@ -80,35 +80,3 @@ button:disabled {
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
 }
-
-/* @media (max-width: 768px) {
-    .login-container {
-        margin: 3rem 1rem;
-        padding: 2rem 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.6rem;
-    }
-
-    input,
-    button,
-    .signup-btn {
-        font-size: 0.95rem;
-        padding: 0.65rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .login-container {
-        padding: 1.5rem 1rem;
-    }
-
-    h2 {
-        font-size: 1.4rem;
-    }
-
-    .signup-section p {
-        font-size: 0.85rem;
-    }
-} */

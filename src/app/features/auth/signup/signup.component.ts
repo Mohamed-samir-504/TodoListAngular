@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 
@@ -24,7 +26,7 @@ function equalPasswords(control: AbstractControl) {
 })
 export class SignupComponent {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private snackBar: MatSnackBar) { }
 
   signupForm = new FormGroup({
     name: new FormControl('', {
@@ -55,16 +57,28 @@ export class SignupComponent {
 
       this.authService.signUp(name!, email!, password!).subscribe({
         next: () => {
-          this.router.navigateByUrl('/login' , { replaceUrl: true });  
+          this.router.navigateByUrl('/login', { replaceUrl: true });
+          this.snackBar.open('Signed up successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',  
+            verticalPosition: 'top',
+            panelClass: ['snackbar-success']
+          });
         },
         error: (err) => {
-          console.error('Signup failed:', err.message);
+          this.snackBar.open('Error signing up', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',  
+            verticalPosition: 'top',
+            panelClass: ['snackbar-error']
+          });
+          console.error('Signup error:', err);
         }
       });
     }
   }
 
   goToLogin(): void {
-    this.router.navigateByUrl('/login' , { replaceUrl: true });  
+    this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 }
