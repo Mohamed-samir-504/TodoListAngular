@@ -20,14 +20,7 @@ const firebaseConfig = {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(
-      routes,
-      withComponentInputBinding(),
-      withRouterConfig({
-        paramsInheritanceStrategy: 'always'
-      })
-    ),
-    provideClientHydration(withEventReplay()),
+    provideRouter(routes),
     provideHttpClient(withInterceptors([tokenInterceptor]))
   ]
 };
