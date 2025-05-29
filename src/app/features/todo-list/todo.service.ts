@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -70,6 +70,15 @@ export class TodoService {
       }
     };
     return this.http.patch(url, body);
+  }
+
+  getDummyTodosFromBackend(): Observable<any> {
+    const url = 'http://localhost:8080/api/dummy-todos';
+    const headers = new HttpHeaders({
+      'X-Validation-Report': 'true'
+    });
+
+    return this.http.get<any>(url, { headers });
   }
 
   responseToArray(response: any[]): any[] {
